@@ -4,7 +4,7 @@
   "description": "PF MGF Logistica",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon index.js",
+    "start": "nodemon index.ts",
     "test": "npm test"
   },
   "repository": {
@@ -29,8 +29,14 @@
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "morgan": "^1.10.0",
-    "nodemon": "^2.0.15",
     "pg": "^8.7.1",
     "sequelize": "^6.12.0-beta.1"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.13",
+    "nodemon": "^2.0.15",
+    "ts-node": "^10.4.0",
+    "tslint": "^6.1.3",
+    "typescript": "^4.5.2"
   }
 }

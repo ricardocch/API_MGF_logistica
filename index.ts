@@ -1,5 +1,5 @@
-const server = require("./app.js");
-const { conn } = require("./db.js");
+const host = require("./app.ts");
+const { conn } = require("./db.ts");
 
 // Syncing all the models at once.
 // conn
@@ -12,6 +12,6 @@ const { conn } = require("./db.js");
 //     });
 //   });
 
-server.listen(process.env.PORT || 3001, () => {
+host.listen(process.env.PORT || 3001, () => {
     console.log("%s listening at 3001"); // eslint-disable-line no-console
 });
