@@ -4,6 +4,7 @@ module.exports = (sequelize) => {
 
     sequelize.define('user',{
         id: {
+            primaryKey: true,
             type: DataTypes.INTEGER,
             allowNull: false
         },
