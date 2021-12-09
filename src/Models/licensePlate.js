@@ -1,4 +1,4 @@
-import {DataTypes} from 'sequelize';
+const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
 
@@ -6,6 +6,7 @@ module.exports = (sequelize) => {
         id: {
             primaryKey: true,
             type: DataTypes.INTEGER,
+            autoIncrement: true,
             allowNull: false
         },
         name:{
