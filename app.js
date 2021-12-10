@@ -5,13 +5,18 @@ const createToken = require('jsonwebtoken');
 const config = require('./configToken/config');
 const routes = require('./routes/index.ts');
 const indexUserModel = require('./src/db.ts');
-const comparePassword = require('./src/controllers/encrypt.ts');
 const server = express();
+
+const routes = require("./routes/index.js");
+
+server.use(express.urlencoded({ extended: true }));
+server.use('/', routes)
 const auth = express();;
 server.set('llave', config.llave);
 server.use(cors());
 server.use(morgan("dev"));
 server.use(express.json());
+
 // Error catching endware.
 server.use((err, req, res, next) => {
   // eslint-disable-line no-unused-vars

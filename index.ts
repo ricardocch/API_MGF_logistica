@@ -1,10 +1,10 @@
-const host = require("./app.ts");
+const host = require("./app.js");
 const { conn } = require("./src/db");
 
 // Syncing all the models at once.
 conn
    .sync({
-     force: false,
+     force: true,
    })
    .then(() => {
     host.listen(process.env.PORT || 3001, () => {
