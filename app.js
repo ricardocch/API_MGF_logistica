@@ -5,20 +5,12 @@ const createToken = require('jsonwebtoken');
 const config = require('./configToken/config');
 const routes = require('./routes/index.ts');
 const indexUserModel = require('./src/db.ts');
-const comparePassword = require('./src/controllers/encrypt.ts');
 const server = express();
 
 const routes = require("./routes/index.js");
 
-server.use(express.json())
 server.use(express.urlencoded({ extended: true }));
 server.use('/', routes)
-server.use(cors());
-server.use(morgan("dev"));
-
-
-
-
 const auth = express();;
 server.set('llave', config.llave);
 server.use(cors());
