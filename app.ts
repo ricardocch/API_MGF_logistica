@@ -4,6 +4,8 @@ const cors = require("cors");
 const createToken = require('jsonwebtoken');
 const config = require('./configToken/config');
 const routes = require('./routes/index.ts');
+const indexUserModel = require('./src/db.ts');
+const comparePassword = require('./src/controllers/encrypt.ts');
 const server = express();
 const auth = express();;
 server.set('llave', config.llave);
@@ -19,22 +21,40 @@ server.use((err, req, res, next) => {
   res.status(status).send(message);
 });
 
-server.post('/login', (req, res) => {
-  if(req.body.usuario === "asdf" && req.body.contrasena === "holamundo") {
-    const payload = {
-    check:  true
-    };
-    const token = createToken.sign(payload, server.get('llave'), {
-    expiresIn: 1440
-    });
-    res.json({
-    mensaje: 'Autenticación correcta',
-    token: token
-    });
-  } else {
-      res.json({ mensaje: "Usuario o contraseña incorrectos"})
-  }
+server.post('/login', async (req, res) => {
+ 
+    let instanceUser = await indexUserModel.User.findOne({
+      where:{name:req.body.usuario}
+    })
+
+    if(instanceUser === null){
+      res.send({msg:'Usuario no encontrado'})
+    }  
+    else{
+      comparePassword.comparePassword(req.body.contrasena,instanceUser.password,function(err,isMatched){
+        console.log(isMatched);
+    
+        if(isMatched) {
+          const payload = {
+          check:  true
+          };
+          const token = createToken.sign(payload, server.get('llave'), {
+          expiresIn: 1440
+          });
+          res.json({
+          mensaje: 'Autenticación correcta',
+          token: token
+          });
+        } else {
+            res.json({ msg: "Contraseña incorrectos"})
+        }
+    
+      })
+    }
+
+
 })
+
 auth.use(function(req, res, next) {
   const token = req.headers['access-token'];
 
