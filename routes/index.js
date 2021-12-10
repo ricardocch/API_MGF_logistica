@@ -1,52 +1,80 @@
+
 const { Router } = require("express");
 const axios = require("axios");
-// Importar todos los routers;
-// Ejemplo: const authRouter = require('./auth.js');
-const {User , LicensePlate} = require('../src/db')
-/* const create = require('./user') */
+const {User , LicensePlate} = require('../src/db.ts')
+var bcrypt = require('bcrypt');
 const router = Router();
-
-
 // Configurar los routers
 // Ejemplo: router.use('/auth', authRouter);
-
 router.get("/types", function (req, res) {});
-router.post('/create',async (req,res)=>{  
-    
+router.post('/create',async (req,res)=>{    
+
     try{ 
-        /* 
-        const name:string = req.body.name;
-        const password:string = req.body.password;
-        const email:string = req.body.email;
-        const admin:boolean = req.body.admin;
-        const phone:number= req.body.phone;                
-       
-       */
+        const {
+            name,           
+            email,
+            admin,
+            phone,
+            password,
+            cuit        
+        }= req.body
 
-        console.log(req.body.name, req.body.password, req.body.email) 
+        
+        if(!/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/.test(password)){
+            throw new Error ('Password must have at least 8 chars 1 Uppercase, 1 lowercase,1 number and 1 special character')
+        }
+        
+    
+        let salt = bcrypt.genSaltSync(10)
+        let pass = bcrypt.hashSync(password,salt)        
+        console.log(pass)
+                
 
-        let [user,userCreated]= await User.findOrCreate({where:{name:req.body.name},
+        if(!/^[a-zA-Z0-9]+$/.test(name)){
+            throw new Error('Name must only have numbers and letters')
+        }
+              
+        let [user,userCreated]= await User.findOrCreate({where:{name:name,cuit:cuit},
             defaults:{            
-             name:req.body.name,
-             password:req.body.password,
-             email:req.body.email,
-             admin:req.body.admin,
-             phone:req.body.phone,
-             cuit:req.body.cuit
-            }})
-
-      
-      
-               
+            name:name, 
+            password:pass,
+            email: email,
+            admin:admin,
+            phone:phone,
+            cuit:cuit
+            }})         
 
          if(userCreated){
-            res.status(200).send('User created successfully')
+           return  res.status(200).send('User created successfully')
         }
-        else{ 
-        res.status(201).send('User already exist')    }
-    }catch(err){       
+        console.log('45 - UserCreated?',userCreated)
+    
+        res.status(201).json(pass)  
+        }catch(err){       
         console.log(err)
         res.status(404).send(err)
     }
 })
+
+router.post('/compare',async (req,res)=>{
+
+    try{
+        const{ user, password} = req.body
+        const usr = await User.findOne({where:{name:user}})
+        console.log(usr)
+
+        if(bcrypt.compareSync(password, usr.password)){
+            res.status(200).send('found')
+        }   
+        else{
+            throw 'Incorrect password'
+        }     
+        
+    }catch(err){
+        console.log(err)
+        res.status(404).send(err)
+    }
+
+})
+
 module.exports = router;

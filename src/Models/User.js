@@ -25,7 +25,7 @@ module.exports = (sequelize) => {
             defaultValue:false,
         },
         phone:{
-            type:DataTypes.INTEGER,
+            type:DataTypes.STRING,
             allowNull:false,
         },
         cuit:{

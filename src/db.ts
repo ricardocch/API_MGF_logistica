@@ -38,7 +38,6 @@ LicensePlate.belongsToMany(User , {through:"User_licensePlate"})
 Videos.belongsTo(LicensePlate)
 LicensePlate.hasMany(Videos) 
 
-console.log(modelDefiners)
 
  module.exports = {
    ...sequelize.models, // para poder importar los modelos así: const { Product, User } = require('./db.js');
