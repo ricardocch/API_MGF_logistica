@@ -1,17 +1,17 @@
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
+var bcrypt = require("bcrypt");
 const createToken = require('jsonwebtoken');
 const config = require('./configToken/config');
-const routes = require('./routes/index.ts');
-const indexUserModel = require('./src/db.ts');
+const indexUserModel = require('./src/db.js');
 const server = express();
-
 const routes = require("./routes/index.js");
 
-server.use(express.urlencoded({ extended: true }));
-server.use('/', routes)
-const auth = express();;
+// server.use(express.urlencoded({ extended: true }));
+// server.use('/', routes)
+
+const auth = express();
 server.set('llave', config.llave);
 server.use(cors());
 server.use(morgan("dev"));
@@ -36,10 +36,7 @@ server.post('/login', async (req, res) => {
       res.send({msg:'Usuario no encontrado'})
     }  
     else{
-      comparePassword.comparePassword(req.body.contrasena,instanceUser.password,function(err,isMatched){
-        console.log(isMatched);
-    
-        if(isMatched) {
+        if(bcrypt.compareSync(req.body.contrasena, instanceUser.password)) {
           const payload = {
           check:  true
           };
@@ -53,8 +50,7 @@ server.post('/login', async (req, res) => {
         } else {
             res.json({ msg: "Contraseña incorrectos"})
         }
-    
-      })
+
     }
 
 
