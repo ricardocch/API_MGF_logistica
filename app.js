@@ -45,7 +45,8 @@ server.post('/login', async (req, res) => {
           });
           res.json({
           mensaje: 'Autenticación correcta',
-          token: token
+          token: token,
+          type:instanceUser.admin
           });
         } else {
             res.json({ msg: "Contraseña incorrectos"})

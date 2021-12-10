@@ -54,7 +54,7 @@ userRouter.post("/create", async (req, res) => {
 userRouter.delete("/delete", async function (req, res) {
   
     try{
-        await userModel.User.destroy({
+        await User.update({active:false},{
             where: {
             name: req.body.user
             }
