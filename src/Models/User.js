@@ -21,8 +21,13 @@ module.exports = (sequelize) => {
             allowNull:false,
         },
         admin:{
+            type:DataTypes.ENUM('sa', 'admin', 'usuario'),
+            allowNull:false
+        },
+        active:{
             type:DataTypes.BOOLEAN,
-            defaultValue:false,
+            allowNull:false,
+            defaultValue:false
         },
         phone:{
             type:DataTypes.STRING,
