@@ -27,7 +27,7 @@ module.exports = (sequelize) => {
         active:{
             type:DataTypes.BOOLEAN,
             allowNull:false,
-            defaultValue:false
+            defaultValue:true
         },
         phone:{
             type:DataTypes.STRING,
