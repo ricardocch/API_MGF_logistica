@@ -1,18 +1,19 @@
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
-var bcrypt = require("bcrypt");
-const createToken = require('jsonwebtoken');
-const config = require('./configToken/config');
-const indexUserModel = require('./src/db.js');
+const config = require("./configToken/config");
+const bcrypt = require("bcrypt");
+const createToken = require("jsonwebtoken");
+const indexUserModel = require("./src/db.js");
 const server = express();
 const routes = require("./routes/index.js");
+const tokenValidated = require("./src/Models/Token");
 
-// server.use(express.urlencoded({ extended: true }));
-// server.use('/', routes)
-
+server.use(express.urlencoded({ extended: true }));
+server.use("/", routes);
 const auth = express();
-server.set('llave', config.llave);
+server.set("llave", config.llave);
+
 server.use(cors());
 server.use(morgan("dev"));
 server.use(express.json());
@@ -26,54 +27,50 @@ server.use((err, req, res, next) => {
   res.status(status).send(message);
 });
 
-server.post('/login', async (req, res) => {
- 
-    let instanceUser = await indexUserModel.User.findOne({
-      where:{name:req.body.username}
-    })
+server.post("/login", async (req, res) => {
+  let instanceUser = await indexUserModel.User.findOne({
+    where: { name: req.body.username },
+  });
 
-    if(instanceUser === null){
-      res.send({msg:'Usuario no encontrado'})
-    }  
-    else{
-        if(bcrypt.compareSync(req.body.password, instanceUser.password)) {
-          const payload = {
-          check:  true
-          };
-          const token = createToken.sign(payload, server.get('llave'), {
-          expiresIn: 1440
-          });
-          res.json({
-          mensaje: 'Autenticación correcta',
-          token: token,
-          type:instanceUser.admin
-          });
-        } else {
-            res.json({ msg: "Contraseña incorrectos"})
-        }
-
+  if (instanceUser === null) {
+    res.send({ msg: "Usuario no encontrado" });
+  } else {
+    if (bcrypt.compareSync(req.body.password, instanceUser.password)) {
+      const payload = {
+        check: true,
+      };
+      const token = createToken.sign(payload, server.get("llave"), {
+        expiresIn: 1440,
+      });
+      res.json({
+        mensaje: "Autenticación correcta",
+        token: token,
+        type: instanceUser.admin,
+      });
+    } else {
+      res.json({ msg: "Contraseña incorrectos" });
     }
+  }
+});
 
-
-})
-
-auth.use(function(req, res, next) {
-  const token = req.headers['access-token'];
+auth.use(function (req, res, next) {
+  const token = req.headers["access-token"];
 
   if (token) {
-    createToken.verify(token, server.get('llave'), (err, decoded) => {      
+    createToken.verify(token, server.get("llave"), (err, decoded) => {
       if (err) {
-        return res.json({ mensaje: 'Token inválida' });    
+        return res.json({ mensaje: "Token inválida" });
       } else {
-        req.decoded = decoded;    
+        req.decoded = decoded;
         next();
       }
     });
   } else {
-    res.send({ 
-        mensaje: 'No se obtuvo token.' 
+    res.send({
+      mensaje: "No se obtuvo token.",
     });
   }
-})
-server.use('/',auth ,routes);
-module.exports = server;  
+});
+server.use("/", auth, routes);
+server.use("/", tokenValidated(), routes);
+module.exports = { server };
