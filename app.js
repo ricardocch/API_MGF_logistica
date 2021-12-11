@@ -29,14 +29,14 @@ server.use((err, req, res, next) => {
 server.post('/login', async (req, res) => {
  
     let instanceUser = await indexUserModel.User.findOne({
-      where:{name:req.body.usuario}
+      where:{name:req.body.username}
     })
 
     if(instanceUser === null){
       res.send({msg:'Usuario no encontrado'})
     }  
     else{
-        if(bcrypt.compareSync(req.body.contrasena, instanceUser.password)) {
+        if(bcrypt.compareSync(req.body.password, instanceUser.password)) {
           const payload = {
           check:  true
           };
