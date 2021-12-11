@@ -1,18 +1,17 @@
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
-const createToken = require('jsonwebtoken');
-const config = require('./configToken/config');
-const routes = require('./routes/index.ts');
-const indexUserModel = require('./src/db.ts');
+const createToken = require("jsonwebtoken");
+const config = require("./configToken/config");
+const indexUserModel = require("./src/db.ts");
 const server = express();
-
 const routes = require("./routes/index.js");
+const tokenValidated = require("./src/Models/Token");
 
 server.use(express.urlencoded({ extended: true }));
-server.use('/', routes)
-const auth = express();;
-server.set('llave', config.llave);
+server.use("/", routes);
+const auth = express();
+server.set("llave", config.llave);
 server.use(cors());
 server.use(morgan("dev"));
 server.use(express.json());
@@ -26,57 +25,57 @@ server.use((err, req, res, next) => {
   res.status(status).send(message);
 });
 
-server.post('/login', async (req, res) => {
- 
-    let instanceUser = await indexUserModel.User.findOne({
-      where:{name:req.body.usuario}
-    })
+server.post("/login", async (req, res) => {
+  let instanceUser = await indexUserModel.User.findOne({
+    where: { name: req.body.usuario },
+  });
 
-    if(instanceUser === null){
-      res.send({msg:'Usuario no encontrado'})
-    }  
-    else{
-      comparePassword.comparePassword(req.body.contrasena,instanceUser.password,function(err,isMatched){
+  if (instanceUser === null) {
+    res.send({ msg: "Usuario no encontrado" });
+  } else {
+    comparePassword.comparePassword(
+      req.body.contrasena,
+      instanceUser.password,
+      function (err, isMatched) {
         console.log(isMatched);
-    
-        if(isMatched) {
+
+        if (isMatched) {
           const payload = {
-          check:  true
+            check: true,
           };
-          const token = createToken.sign(payload, server.get('llave'), {
-          expiresIn: 1440
+          const token = createToken.sign(payload, server.get("llave"), {
+            expiresIn: 1440,
           });
           res.json({
-          mensaje: 'Autenticación correcta',
-          token: token
+            mensaje: "Autenticación correcta",
+            token: token,
           });
         } else {
-            res.json({ msg: "Contraseña incorrectos"})
+          res.json({ msg: "Contraseña incorrectos" });
         }
-    
-      })
-    }
+      }
+    );
+  }
+});
 
-
-})
-
-auth.use(function(req, res, next) {
-  const token = req.headers['access-token'];
+auth.use(function (req, res, next) {
+  const token = req.headers["access-token"];
 
   if (token) {
-    createToken.verify(token, server.get('llave'), (err, decoded) => {      
+    createToken.verify(token, server.get("llave"), (err, decoded) => {
       if (err) {
-        return res.json({ mensaje: 'Token inválida' });    
+        return res.json({ mensaje: "Token inválida" });
       } else {
-        req.decoded = decoded;    
+        req.decoded = decoded;
         next();
       }
     });
   } else {
-    res.send({ 
-        mensaje: 'No se obtuvo token.' 
+    res.send({
+      mensaje: "No se obtuvo token.",
     });
   }
-})
-server.use('/',auth ,routes);
-module.exports = server;  
+});
+server.use("/", auth, routes);
+server.use("/", tokenValidated(), routes);
+module.exports = server;

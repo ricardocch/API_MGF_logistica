@@ -1,3 +1,3 @@
 module.exports = {
-    llave: "HenryB@ck_6"
-}
+  llave: "HenryB@ck_6",
+};

@@ -1,22 +1,20 @@
-const { Router } = require("express");
 const { default: axios } = require("axios");
-const routerToken = Router();
+const routerAccountList = Router();
 const Md5 = require("md5");
 const utf8 = require("utf8");
 const { USER_ID, PASSWORD_MD5, APP_KEY, APP_SECRET } = process.env;
-console.log(USER_ID);
-routerToken.post("/new-token", function (req, res) {
+
+routerAccountList.post("/account-list", function (req, res) {
   // objeto de parametros para el sing
   let paramsSing = {
     app_key: "8FB345B8693CCD0071EC1A2E4EB83F57",
-    expires_in: 7200,
     timestamp: new Date().toISOString().slice(0, 19).replace("T", " "),
     format: "json",
     method: "jimi.oauth.token.get",
-    user_id: "Jeronimo1",
-    sign_method: "md5",
-    user_pwd_md5: "fbb9de8a0ca92b4aa9f98ddd90462b0b",
     v: "1.0",
+    sign_method: "md5",
+    access_token: "",
+    target: "",
   };
 
   //str de parametros ordenados alfabeticamente y unidos
@@ -28,17 +26,17 @@ routerToken.post("/new-token", function (req, res) {
   const sign = Md5(app_secret + temp + app_secret).toUpperCase();
 
   // creo la query de parametros de la peticion
-  var urlencoded = new URLSearchParams();
+  var urlencoded = new URLSearchParams(paramsSing).toString();
   urlencoded.append("sign", sign);
-  urlencoded.append("app_key", paramsSing.app_key);
-  urlencoded.append("expires_in", paramsSing.expires_in);
-  urlencoded.append("format", paramsSing.format);
-  urlencoded.append("v", paramsSing.v);
-  urlencoded.append("method", paramsSing.method);
-  urlencoded.append("user_pwd_md5", paramsSing.user_pwd_md5);
-  urlencoded.append("sign_method", paramsSing.sign_method);
-  urlencoded.append("user_id", paramsSing.user_id);
-  urlencoded.append("timestamp", paramsSing.timestamp);
+  // urlencoded.append("app_key", paramsSing.app_key);
+  // urlencoded.append("expires_in", paramsSing.expires_in);
+  // urlencoded.append("format", paramsSing.format);
+  // urlencoded.append("v", paramsSing.v);
+  // urlencoded.append("method", paramsSing.method);
+  // urlencoded.append("user_pwd_md5", paramsSing.user_pwd_md5);
+  // urlencoded.append("sign_method", paramsSing.sign_method);
+  // urlencoded.append("user_id", paramsSing.user_id);
+  // urlencoded.append("timestamp", paramsSing.timestamp);
 
   // objeto que define las propiedades de la peticion
   var requestOptions = {
@@ -61,4 +59,7 @@ routerToken.post("/new-token", function (req, res) {
       res.send(error.data);
     });
 });
-module.exports = routerToken;
+
+module.exports = {
+  routerAccountList,
+};

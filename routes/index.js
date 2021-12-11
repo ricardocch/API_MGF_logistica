@@ -4,7 +4,6 @@ const { User, LicensePlate } = require("../src/db.ts");
 var bcrypt = require("bcrypt");
 const router = Router();
 
-router.get("/types", function (req, res) {});
 router.post("/create", async (req, res) => {
   try {
     const { name, email, admin, phone, password, cuit } = req.body;
