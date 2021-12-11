@@ -3,19 +3,18 @@ const morgan = require("morgan");
 const cors = require("cors");
 const createToken = require('jsonwebtoken');
 const config = require('./configToken/config');
-const routes = require('./routes/index.ts');
 const indexUserModel = require('./src/db.ts');
 const server = express();
-
-const routes = require("./routes/index.js");
+const routes = require("./routes/index");
+const bcrypt = require("bcrypt");
 
 server.use(express.urlencoded({ extended: true }));
+server.use(express.json());
 server.use('/', routes)
 const auth = express();;
 server.set('llave', config.llave);
 server.use(cors());
 server.use(morgan("dev"));
-server.use(express.json());
 
 // Error catching endware.
 server.use((err, req, res, next) => {
@@ -28,34 +27,31 @@ server.use((err, req, res, next) => {
 
 server.post('/login', async (req, res) => {
  
-    let instanceUser = await indexUserModel.User.findOne({
-      where:{name:req.body.usuario}
-    })
+  let instanceUser = await indexUserModel.User.findOne({
+    where:{name:req.body.username}
+  })
 
-    if(instanceUser === null){
-      res.send({msg:'Usuario no encontrado'})
-    }  
-    else{
-      comparePassword.comparePassword(req.body.contrasena,instanceUser.password,function(err,isMatched){
-        console.log(isMatched);
-    
-        if(isMatched) {
-          const payload = {
-          check:  true
-          };
-          const token = createToken.sign(payload, server.get('llave'), {
-          expiresIn: 1440
-          });
-          res.json({
-          mensaje: 'Autenticación correcta',
-          token: token
-          });
-        } else {
-            res.json({ msg: "Contraseña incorrectos"})
-        }
-    
-      })
-    }
+  if(instanceUser === null){
+    res.send({msg:'Usuario no encontrado'})
+  }  
+  else{
+      if(bcrypt.compareSync(req.body.password, instanceUser.password)) {
+        const payload = {
+        check:  true
+        };
+        const token = createToken.sign(payload, server.get('llave'), {
+        expiresIn: 1440
+        });
+        res.json({
+        mensaje: 'Autenticación correcta',
+        token: token,
+        type:instanceUser.admin
+        });
+      } else {
+          res.json({ msg: "Contraseña incorrectos"})
+      }
+
+  }
 
 
 })
