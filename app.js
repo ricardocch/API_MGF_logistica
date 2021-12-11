@@ -14,9 +14,6 @@ server.use("/", routes);
 const auth = express();
 server.set("llave", config.llave);
 
-const auth = express();
-server.set("llave", config.llave);
-
 server.use(cors());
 server.use(morgan("dev"));
 server.use(express.json());
