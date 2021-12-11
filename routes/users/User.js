@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const axios = require("axios");
-const {User , LicensePlate} = require('../src/db.ts')
+const {User , LicensePlate} = require('../../src/db')
 var bcrypt = require('bcrypt');
 const router = Router();
 

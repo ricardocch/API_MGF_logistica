@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const router = Router();
 const bcrypt = require("bcrypt");
-const { User, LicensePlate } = require("../src/db.js");
+const { User, LicensePlate } = require('../../src/db');
  
 router.delete("/delete", async function (req, res) {
   
