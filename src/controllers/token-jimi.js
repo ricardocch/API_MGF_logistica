@@ -1,45 +1,55 @@
 const axios = require("axios");
+const { Router } = require("express");
+const router = Router();
 const Md5 = require("md5");
 const utf8 = require("utf8");
 const { USER_ID, PASSWORD_MD5, APP_KEY, APP_SECRET } = process.env;
-const { Token } = require("../db.ts");
+const { Token } = require("../db");
 const moment = require("moment");
-const tokenValidated = await Token.findAll()[0];
+let tokenValidated = "";
 
-async function authenticationToken() {
+router.use(async function (req, res, next) {
   // Busco el token en la base de datos
+  tokenValidated = await Token.findByPk(1);
+  let timeDBExpiration = moment(tokenValidated.time)
+    .add(2, "h")
+    .format("YYYY-M-DD HH:mm:ss");
+  let newTime = new Date().toISOString().slice(0, 19).replace("T", " ");
+  let timeRefresh = moment(tokenValidated.time)
+    .add(1, "h")
+    .add(50, "m")
+    .format("YYYY-M-DD HH:mm:ss");
+  console.log("primera funcion");
   // Verifico que sea menor que la hora y que sea menor que la hora de expiración menos diez minutos
-  if (
-    (tokenValidated.time <=
-      new Date().toISOString().slice(0, 19).replace("T", " ") ||
-      tokenValidated === undefined) &&
-    (tokenValidated.time <=
-      moment(tokenValidated.time)
-        .add(1, "h")
-        .add(50, "m")
-        .format("YYYY-M-DD HH:mm:ss") ||
-      tokenValidated === undefined)
+
+  if (tokenValidated === null) {
+    console.log("GET TOKEN por undefined");
+    getToken();
+  } else if (
+    moment(newTime).isBefore(timeDBExpiration) &&
+    moment(newTime).isBefore(timeRefresh)
   ) {
-    return true;
+    console.log("valido que el token de la api ya existe");
+    return next();
     // Verifico si esta dentro del margen de 10 min antes de vencer el token para ver si puedo refrescarlo y no tener que crear otro
   } else if (
-    tokenValidated.time <=
-      new Date().toISOString().slice(0, 19).replace("T", " ") &&
-    !tokenValidated.time <=
-      moment(tokenValidated.time)
-        .add(1, "h")
-        .add(50, "m")
-        .format("YYYY-M-DD HH:mm:ss")
+    moment(newTime).isBefore(timeDBExpiration) &&
+    moment(newTime).isAfter(timeRefresh)
   ) {
     refreshToken(tokenValidated);
   } else {
+    console.log("GET TOKEN por ultimo else");
+
     //En ultima instancia creo uno nuevo
     getToken(tokenValidated);
   }
-}
+  next();
+});
 
 async function getToken(tokenValidated) {
   // objeto de parametros para el sing
+  console.log("entró en getToken");
+
   let paramsSing = {
     app_key: APP_KEY,
     expires_in: 7200,
@@ -60,17 +70,17 @@ async function getToken(tokenValidated) {
   const sign = Md5(APP_SECRET + temp + APP_SECRET).toUpperCase();
 
   // creo la query de parametros de la peticion
-  var urlencoded = new URLSearchParams(paramsSing).toString();
+  var urlencoded = new URLSearchParams();
   urlencoded.append("sign", sign);
-  // urlencoded.append("app_key", paramsSing.app_key);
-  // urlencoded.append("expires_in", paramsSing.expires_in);
-  // urlencoded.append("format", paramsSing.format);
-  // urlencoded.append("v", paramsSing.v);
-  // urlencoded.append("method", paramsSing.method);
-  // urlencoded.append("user_pwd_md5", paramsSing.user_pwd_md5);
-  // urlencoded.append("sign_method", paramsSing.sign_method);
-  // urlencoded.append("user_id", paramsSing.user_id);
-  // urlencoded.append("timestamp", paramsSing.timestamp);
+  urlencoded.append("app_key", paramsSing.app_key);
+  urlencoded.append("expires_in", paramsSing.expires_in);
+  urlencoded.append("format", paramsSing.format);
+  urlencoded.append("v", paramsSing.v);
+  urlencoded.append("method", paramsSing.method);
+  urlencoded.append("user_pwd_md5", paramsSing.user_pwd_md5);
+  urlencoded.append("sign_method", paramsSing.sign_method);
+  urlencoded.append("user_id", paramsSing.user_id);
+  urlencoded.append("timestamp", paramsSing.timestamp);
 
   // objeto que define las propiedades de la peticion
   var requestOptions = {
@@ -83,11 +93,25 @@ async function getToken(tokenValidated) {
     },
     params: urlencoded,
   };
+  console.log("esta pór hacer la peticion");
 
-  //hago la peticion y devuelvo la info a postman
+  // hago la peticion y devuelvo la info a postman
+  // axios("http://open.10000track.com/route/rest", requestOptions)
+  //   .then((response) => {
+  //     console.log("data de la peticion", response.data);
+  //     const updateToken = Token.create({
+  //       time: response.data.result.time,
+  //       token: response.data.result.accessToken,
+  //       refreshToken: response.data.result.refreshToken,
+  //     });
+  //   })
+  //   .catch(function (error) {
+  //     console.log(error.data);
+  //   });
   axios("http://open.10000track.com/route/rest", requestOptions)
     .then((response) => {
-      const updateToken = await tokenValidated.update({
+      console.log(response.data);
+      const newToken = tokenValidated.update({
         time: response.data.result.time,
         token: response.data.result.accessToken,
         refreshToken: response.data.result.refreshToken,
@@ -120,17 +144,17 @@ async function refreshToken(tokenValidated) {
   const sign = Md5(app_secret + temp + app_secret).toUpperCase();
 
   // creo la query de parametros de la peticion
-  var urlencoded = new URLSearchParams(paramsSing).toString();
+  var urlencoded = new URLSearchParams();
   urlencoded.append("sign", sign);
-  // urlencoded.append("app_key", paramsSing.app_key);
-  // urlencoded.append("expires_in", paramsSing.expires_in);
-  // urlencoded.append("format", paramsSing.format);
-  // urlencoded.append("v", paramsSing.v);
-  // urlencoded.append("method", paramsSing.method);
-  // urlencoded.append("user_pwd_md5", paramsSing.user_pwd_md5);
-  // urlencoded.append("sign_method", paramsSing.sign_method);
-  // urlencoded.append("user_id", paramsSing.user_id);
-  // urlencoded.append("timestamp", paramsSing.timestamp);
+  urlencoded.append("app_key", paramsSing.app_key);
+  urlencoded.append("expires_in", paramsSing.expires_in);
+  urlencoded.append("format", paramsSing.format);
+  urlencoded.append("v", paramsSing.v);
+  urlencoded.append("method", paramsSing.method);
+  urlencoded.append("user_pwd_md5", paramsSing.user_pwd_md5);
+  urlencoded.append("sign_method", paramsSing.sign_method);
+  urlencoded.append("user_id", paramsSing.user_id);
+  urlencoded.append("timestamp", paramsSing.timestamp);
   // objeto que define las propiedades de la peticion
   var requestOptions = {
     method: "POST",
@@ -146,15 +170,16 @@ async function refreshToken(tokenValidated) {
   //hago la peticion y devuelvo la info a postman
   axios("http://open.10000track.com/route/rest", requestOptions)
     .then((response) => {
-      const updateToken = await tokenValidated.update({
+      console.log(response.data);
+      const refreshToken = tokenValidated.update({
         time: response.data.result.time,
         token: response.data.result.accessToken,
         refreshToken: response.data.result.refreshToken,
       });
     })
-    .catch(function (error) {
-      res.send(error.data);
+    .catch((error) => {
+      console.log(error.data);
     });
 }
 
-module.exports = { authenticationToken };
+module.exports = router;
