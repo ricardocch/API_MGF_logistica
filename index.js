@@ -1,5 +1,5 @@
 const host = require("./app.js");
-const { conn } = require("./src/db.ts");
+const { conn } = require("./src/db.js");
 
 // Syncing all the models at once.
 conn

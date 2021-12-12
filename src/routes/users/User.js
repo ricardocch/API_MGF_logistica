@@ -1,13 +1,14 @@
 const { Router } = require("express");
 const axios = require("axios");
-const {User , LicensePlate} = require('../../src/db')
+const {User , LicensePlate} = require('../../db.js')
 var bcrypt = require('bcrypt');
 const router = Router();
 
 router.post('/',async (req,res)=>{    
-
+    console.log(User);
     const {
-        name,           
+        user,  
+        name,         
         email,
         admin,
         phone,
@@ -15,7 +16,6 @@ router.post('/',async (req,res)=>{
         cuit        
     }= req.body
 
-    console.log(req.body.name)
     try{ 
 
         
@@ -25,17 +25,17 @@ router.post('/',async (req,res)=>{
         
     
         let salt = bcrypt.genSaltSync(10)
-        let pass = bcrypt.hashSync(password,salt)        
-        console.log(pass)
+        let pass = bcrypt.hashSync(password,salt)   
                 
 
-        if(!/^[a-zA-Z0-9]+$/.test(name)){
-            throw new Error('Name must only have numbers and letters')
+        if(!/^[a-zA-Z0-9]+$/.test(user)){
+            throw new Error('user must only have numbers and letters')
         }
               
-        let [user,userCreated]= await User.findOrCreate({where:{name:name,cuit:cuit},
+        let [instanceUser,userCreated]= await User.findOrCreate({where:{user:user,cuit:cuit},
             defaults:{            
-            name:name, 
+            user:user, 
+            name:name,
             password:pass,
             email: email,
             admin:admin,
@@ -46,7 +46,7 @@ router.post('/',async (req,res)=>{
          if(userCreated){
            return  res.status(200).send('User created successfully')
         }
-        console.log('45 - UserCreated?',userCreated)
+       
     
         res.status(201).json(pass)  
         }catch(err){       

@@ -6,11 +6,10 @@ const bcrypt = require("bcrypt");
 const createToken = require("jsonwebtoken");
 const indexUserModel = require("./src/db.js");
 const server = express();
-const routes = require("./routes/index.js");
-const tokenValidated = require("./src/Models/Token");
+const routes = require("./src/routes/index.js");
+const authenticationToken = require("./src/controllers/token-jimi");
 
 server.use(express.urlencoded({ extended: true }));
-server.use("/", routes);
 const auth = express();
 server.set("llave", config.llave);
 
@@ -29,7 +28,7 @@ server.use((err, req, res, next) => {
 
 server.post("/login", async (req, res) => {
   let instanceUser = await indexUserModel.User.findOne({
-    where: { name: req.body.username },
+    where: { user: req.body.username },
   });
 
   if (instanceUser === null) {
@@ -71,6 +70,16 @@ auth.use(function (req, res, next) {
     });
   }
 });
-server.use("/", auth, routes);
-server.use("/", tokenValidated(), routes);
-module.exports = { server };
+
+//ruta para ignorar middlewares
+server.use("/", routes);
+
+//ruta para probar token jwt
+// server.use("/", auth, routes);
+
+//ruta para probar refresh api token
+// server.use("/", authenticationToken, routes);
+
+//ruta ambos middlewares
+// server.use("/", [auth,authenticationToken], routes);
+module.exports =  server ;

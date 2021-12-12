@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const router = Router();
 const bcrypt = require("bcrypt");
-const { User, LicensePlate } = require("../../src/db.js");
+const {User , LicensePlate} = require('../../db.js')
 
 
 router.post("/", async (req, res) => {
@@ -11,7 +11,7 @@ router.post("/", async (req, res) => {
 
 
       const user = await User.findOne({where:{
-          name:username,
+          user:username,
       }})
       
       if(!user){
