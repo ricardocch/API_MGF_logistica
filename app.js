@@ -1,7 +1,6 @@
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
-const config = require("./configToken/config");
 const bcrypt = require("bcrypt");
 const createToken = require("jsonwebtoken");
 require("dotenv").config();
