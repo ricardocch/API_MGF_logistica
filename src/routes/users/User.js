@@ -1,11 +1,11 @@
 const { Router } = require("express");
-const axios = require("axios");
+const {sendMail} = require("../../controllers/email.js")
 const {User , LicensePlate} = require('../../db.js')
 var bcrypt = require('bcrypt');
 const router = Router();
 
 router.post('/',async (req,res)=>{    
-    console.log(User);
+   
     const {
         user,  
         name,         
@@ -44,7 +44,18 @@ router.post('/',async (req,res)=>{
             }})         
 
          if(userCreated){
-           return  res.status(200).send('User created successfully')
+
+            try{
+                // envio mail confirmacion
+                let respMail = await sendMail(instanceUser.email,'Usuario creado','Su usuario en MGF Logistica se ha creado con éxito')
+                return res.status(200).send({msg:'User created successfully',
+                    email:respMail
+                })
+            }
+            catch{
+               return res.status(404).send({err:'Usuario Creado, Fallo en  envio email'})
+            }
+            
         }
        
     
