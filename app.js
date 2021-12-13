@@ -4,6 +4,7 @@ const cors = require("cors");
 const config = require("./configToken/config");
 const bcrypt = require("bcrypt");
 const createToken = require("jsonwebtoken");
+require("dotenv").config();
 const indexUserModel = require("./src/db.js");
 const server = express();
 const routes = require("./src/routes/index.js");
@@ -11,7 +12,7 @@ const authenticationToken = require("./src/controllers/token-jimi");
 
 server.use(express.urlencoded({ extended: true }));
 const auth = express();
-server.set("llave", config.llave);
+server.set("llave", process.env.JWT);
 
 server.use(cors());
 server.use(morgan("dev"));
