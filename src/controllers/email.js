@@ -1,9 +1,13 @@
 require("dotenv").config();
-
+// funcion de envio de correo
+// racibe para quien se envia,elasunto y el mensaje
+//to,subject,text
+//retorna una promesa
 module.exports = {
     sendMail: function(to,subject,text){
         const nodemailer = require('nodemailer');
-
+        //configuracion de smtp
+        //las credenciales se configuran el .env
         let configMail = {
           host: "smtp.mailtrap.io",
           port: 2525,
@@ -13,14 +17,17 @@ module.exports = {
           }
         }
         let transport = nodemailer.createTransport(configMail)
-      
+      //el from debe ser el correo desde donde se envia,configura en archivo .env
+      //para efectos de test no importa el from,
+      //para producción debe coincidir con el correo desde donde se envia
         const message = {
-          from: 'HenryBack62021@gmail.com', 
+          from: process.env.SMTP_FROM, 
           to,   
           subject, 
           text 
       };
       return new Promise((resolve, reject) => {
+          //envia el email
         transport.sendMail(message, function(err, info) {
             if (err) {
                 reject({err})

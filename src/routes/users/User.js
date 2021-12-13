@@ -46,13 +46,14 @@ router.post('/',async (req,res)=>{
          if(userCreated){
 
             try{
+                // envio mail confirmacion
                 let respMail = await sendMail(instanceUser.email,'Usuario creado','Su usuario en MGF Logistica se ha creado con éxito')
                 return res.status(200).send({msg:'User created successfully',
                     email:respMail
                 })
             }
             catch{
-               return res.status(404).send('Usuario Creado, Fallo en  envio email')
+               return res.status(404).send({err:'Usuario Creado, Fallo en  envio email'})
             }
             
         }
