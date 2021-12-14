@@ -7,3 +7,5 @@ INSERT INTO public.users(
 INSERT INTO public.users(
 	 name,"user", password, email, admin, phone, cuit)
 	VALUES ('Wenceslao','Wenceslao', '$2b$10$guyWP0EFfugpWRqHG2lFFuiHhiGnvtbK.BAWVHpHrsF3tgtBwKrda', 'richard@com.com', 'admin', '55698989', 'uno');
+
+
