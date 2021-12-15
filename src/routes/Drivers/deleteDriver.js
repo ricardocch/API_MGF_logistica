@@ -1,17 +1,17 @@
 const { Router } = require("express");
 const router = Router();
 const bcrypt = require("bcryptjs");
-const {User , LicensePlate} = require('../../db.js')
+const {Driver} = require('../../db.js')
  
 router.put("/", async function (req, res) {
-  console.log(User);
+  
     try{
-        await User.update({active:false},{
+        await Driver.update({active:false},{
             where: {
-            user: req.body.user
+            name: req.body.driver
             }
         })
-        res.status(200).send({msg:'Usuario eliminado con exito'})
+        res.status(200).send({msg:'Successfully deleted'})
     }
     catch(err){
         res.status(500).send({err})

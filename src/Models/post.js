@@ -1,17 +1,13 @@
 const { DataTypes } = require("sequelize");
 
 module.exports = (sequelize) => {
-  sequelize.define("videos", {
+  sequelize.define("post", {
     id: {
       primaryKey: true,
       type: DataTypes.INTEGER,
       autoIncrement: true,
       allowNull: false,
-    },
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
+    },    
     date: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -20,15 +16,11 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    driver: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
     origin: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    destiny: {
+    destination: {
       type: DataTypes.STRING,
       allowNull: false,
     },
@@ -36,13 +28,13 @@ module.exports = (sequelize) => {
       type: DataTypes.DATE,
       allowNull: false,
     },
-    arrival: {
+    arrivalTime: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    uploadDate: {
-      type: DataTypes.DATE,
+    video:{
+      type: DataTypes.STRING,
       allowNull: false,
-    },
+    }
   });
 };

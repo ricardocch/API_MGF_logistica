@@ -1,7 +1,7 @@
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const createToken = require("jsonwebtoken");
 require("dotenv").config();
 const indexUserModel = require("./src/db.js");
@@ -72,10 +72,10 @@ auth.use(function (req, res, next) {
 });
 
 //ruta para ignorar middlewares
-server.use("/", routes);
+//server.use("/", routes);
 
 //ruta para probar token jwt
-// server.use("/", auth, routes);
+server.use("/", auth, routes);
 
 //ruta para probar refresh api token
 // server.use("/", authenticationToken, routes);

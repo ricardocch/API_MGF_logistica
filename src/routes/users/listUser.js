@@ -1,10 +1,10 @@
 const { Router } = require("express");
 const router = Router();
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const { Op } = require("sequelize");
 const {User , LicensePlate} = require('../../db.js')
  
-router.get("/", async function (req, res) {
+router.post("/", async function (req, res) {
   
     try{
         let userAdminInstance = await User.findOne({
