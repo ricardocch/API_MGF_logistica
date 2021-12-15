@@ -1,19 +1,16 @@
 const { Router } = require("express");
 const {sendMail} = require("../../controllers/email.js")
 const {User , LicensePlate} = require('../../db.js')
-var bcrypt = require('bcrypt');
+var bcrypt = require('bcryptjs');
 const router = Router();
 
 router.post('/',async (req,res)=>{    
    
     const {
-        user,  
-        name,         
+        user,         
         email,
-        admin,
-        phone,
-        password,
-        cuit        
+        admin,       
+        password,      
     }= req.body
 
     try{ 
@@ -32,15 +29,12 @@ router.post('/',async (req,res)=>{
             throw new Error('user must only have numbers and letters')
         }
               
-        let [instanceUser,userCreated]= await User.findOrCreate({where:{user:user,cuit:cuit},
+        let [instanceUser,userCreated]= await User.findOrCreate({where:{user:user},
             defaults:{            
-            user:user, 
-            name:name,
+            user:user,            
             password:pass,
             email: email,
-            admin:admin,
-            phone:phone,
-            cuit:cuit
+            admin:admin,            
             }})         
 
          if(userCreated){

@@ -12,11 +12,7 @@ module.exports = (sequelize) => {
       user: {
         type: DataTypes.STRING,
         allowNull: false,
-      },
-      name: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
+      },     
       password: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -34,15 +30,7 @@ module.exports = (sequelize) => {
         allowNull: false,
         defaultValue: true,
       },
-      phone: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      cuit: {
-        type: DataTypes.STRING,
-        unique: true,
-        allowNull: false,
-      },
+     
     },
     {
       timestamps: false,
