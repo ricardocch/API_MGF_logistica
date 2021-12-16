@@ -1,19 +1,19 @@
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
-const config = require("./configToken/config");
 const bcrypt = require("bcrypt");
 const createToken = require("jsonwebtoken");
+const config = require("./configToken/config");
 const indexUserModel = require("./src/db.js");
 const server = express();
-const routes = require("./routes/index.js");
-const tokenValidated = require("./src/Models/Token");
+const routes = require("./src/routes/index");
+const authenticationToken = require("./src/controllers/token-jimi");
 
-server.use(express.urlencoded({ extended: true }));
-server.use("/", routes);
+// server.use(express.urlencoded({ extended: true }));
+// server.use('/', routes)
+
 const auth = express();
 server.set("llave", config.llave);
-
 server.use(cors());
 server.use(morgan("dev"));
 server.use(express.json());
@@ -71,6 +71,6 @@ auth.use(function (req, res, next) {
     });
   }
 });
-server.use("/", auth, routes);
-server.use("/", tokenValidated(), routes);
-module.exports = { server };
+server.use("/", authenticationToken, routes);
+// server.use("/", auth, routes);
+module.exports = server;

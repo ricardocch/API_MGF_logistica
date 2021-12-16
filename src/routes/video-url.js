@@ -7,7 +7,6 @@ const { Token } = require("../db");
 const router = Router();
 
 router.post("/", async function (req, res) {
-  console.error("entro en account-list");
   const tokenPassword = await Token.findByPk(1);
 
   // objeto de parametros para el sing
@@ -15,11 +14,15 @@ router.post("/", async function (req, res) {
     app_key: APP_KEY,
     timestamp: new Date().toISOString().slice(0, 19).replace("T", " "),
     format: "json",
-    method: "jimi.user.device.list",
+    method: "jimi.device.media.URL",
     v: "1.0",
     sign_method: "md5",
     access_token: tokenPassword.token,
-    target: USER_ID,
+    imei: "862798050059324",
+    media_type: "2",
+    camera: "2",
+    // start_time: "2021-07-20 18:43:26",
+    // end_time: "2021-07-20 18:53:26",
   };
 
   //str de parametros ordenados alfabeticamente y unidos
@@ -40,7 +43,11 @@ router.post("/", async function (req, res) {
   urlencoded.append("sign_method", paramsSing.sign_method);
   urlencoded.append("access_token", paramsSing.access_token);
   urlencoded.append("timestamp", paramsSing.timestamp);
-  urlencoded.append("target", paramsSing.target);
+  urlencoded.append("imei", paramsSing.imei);
+  urlencoded.append("media_type", paramsSing.media_type);
+  urlencoded.append("camera", paramsSing.camera);
+  // urlencoded.append("start_time", paramsSing.start_time);
+  // urlencoded.append("end_time", paramsSing.end_time);
 
   // objeto que define las propiedades de la peticion
   var requestOptions = {
@@ -53,7 +60,6 @@ router.post("/", async function (req, res) {
     },
     params: urlencoded,
   };
-  console.error("esta por hacer la peticion");
 
   //hago la peticion y devuelvo la info a postman
   axios("http://open.10000track.com/route/rest", requestOptions)
@@ -61,7 +67,6 @@ router.post("/", async function (req, res) {
       res.send(response.data);
     })
     .catch(function (error) {
-      console.error(error.data);
       res.send(error.data);
     });
 });

@@ -1,5 +1,4 @@
 require("dotenv").config();
-// const { Token } = require("./src/db");
 const { Sequelize } = require("sequelize");
 const fs = require("fs");
 const path = require("path");
