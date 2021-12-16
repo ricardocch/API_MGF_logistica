@@ -2,11 +2,12 @@ const { default: axios } = require("axios");
 const { Router } = require("express");
 const Md5 = require("md5");
 const utf8 = require("utf8");
-const { APP_KEY, APP_SECRET } = process.env;
-const { Token } = require("../db");
+const { APP_KEY, APP_SECRET, USER_ID } = process.env;
+const { Token } = require("../../db");
 const router = Router();
 
 router.post("/", async function (req, res) {
+  console.error("entro en account-list");
   const tokenPassword = await Token.findByPk(1);
 
   // objeto de parametros para el sing
@@ -14,11 +15,11 @@ router.post("/", async function (req, res) {
     app_key: APP_KEY,
     timestamp: new Date().toISOString().slice(0, 19).replace("T", " "),
     format: "json",
-    method: "jimi.track.device.detail",
+    method: "jimi.user.device.list",
     v: "1.0",
     sign_method: "md5",
     access_token: tokenPassword.token,
-    imei: "862798050059324",
+    target: USER_ID,
   };
 
   //str de parametros ordenados alfabeticamente y unidos
@@ -39,7 +40,7 @@ router.post("/", async function (req, res) {
   urlencoded.append("sign_method", paramsSing.sign_method);
   urlencoded.append("access_token", paramsSing.access_token);
   urlencoded.append("timestamp", paramsSing.timestamp);
-  urlencoded.append("imei", paramsSing.imei);
+  urlencoded.append("target", paramsSing.target);
 
   // objeto que define las propiedades de la peticion
   var requestOptions = {
@@ -52,6 +53,7 @@ router.post("/", async function (req, res) {
     },
     params: urlencoded,
   };
+  console.error("esta por hacer la peticion");
 
   //hago la peticion y devuelvo la info a postman
   axios("http://open.10000track.com/route/rest", requestOptions)
@@ -59,6 +61,7 @@ router.post("/", async function (req, res) {
       res.send(response.data);
     })
     .catch(function (error) {
+      console.error(error.data);
       res.send(error.data);
     });
 });

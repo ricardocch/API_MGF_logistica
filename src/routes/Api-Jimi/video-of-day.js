@@ -3,7 +3,7 @@ const { Router } = require("express");
 const Md5 = require("md5");
 const utf8 = require("utf8");
 const { APP_KEY, APP_SECRET, USER_ID } = process.env;
-const { Token } = require("../db");
+const { Token } = require("../../db");
 const router = Router();
 const moment = require("moment");
 
@@ -15,14 +15,15 @@ router.post("/", async function (req, res) {
     app_key: APP_KEY,
     timestamp: new Date().toISOString().slice(0, 19).replace("T", " "),
     format: "json",
-    method: "jimi.device.track.list",
+    method: "jimi.device.media.URL",
     v: "1.0",
     sign_method: "md5",
     access_token: tokenPassword.token,
     imei: "862798050059324",
-    map_type: "GOOGLE",
-    begin_time: "2021-12-13 18:12:00",
-    end_time: "2021-12-13 18:13:00",
+    camera: "1",
+    media_type: "2",
+    start_time: "2021-12-13 00:00:00",
+    end_time: "2021-12-13 23:00:00",
   };
   //str de parametros ordenados alfabeticamente y unidos
   let temp = utf8.encode(
@@ -42,9 +43,11 @@ router.post("/", async function (req, res) {
   urlencoded.append("sign_method", paramsSing.sign_method);
   urlencoded.append("access_token", paramsSing.access_token);
   urlencoded.append("imei", paramsSing.imei);
+  urlencoded.append("media_type", paramsSing.media_type);
+  urlencoded.append("camera", paramsSing.camera);
+  urlencoded.append("start_time", paramsSing.start_time);
   urlencoded.append("end_time", paramsSing.end_time);
-  urlencoded.append("begin_time", paramsSing.begin_time);
-  urlencoded.append("map_type", paramsSing.map_type);
+  // objeto que define las propiedades de la peticion
   var requestOptions = {
     method: "POST",
     Accept: "application/json",

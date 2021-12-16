@@ -19,3 +19,5 @@ router.put("/", async function (req, res) {
     res.status(500).send({ err });
   }
 });
+
+module.exports = router;

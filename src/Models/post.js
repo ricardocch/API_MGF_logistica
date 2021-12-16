@@ -7,7 +7,7 @@ module.exports = (sequelize) => {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       allowNull: false,
-    },    
+    },
     date: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -32,9 +32,13 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    video:{
+    video: {
       type: DataTypes.STRING,
       allowNull: false,
-    }
+    },
+    author: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
   });
 };

@@ -6,50 +6,54 @@ const utf8 = require("utf8");
 const { USER_ID, PASSWORD_MD5, APP_KEY, APP_SECRET } = process.env;
 const { Token } = require("../db");
 const moment = require("moment");
-let tokenValidated = "";
 
 router.use(async function (req, res, next) {
   // Busco el token en la base de datos
-  tokenValidated = await Token.findByPk(1);
+  const [tokenValidated, created] = await Token.findOrCreate({
+    where: { id: 1 },
+    defaults: {
+      time: "2021-01-01 00:00:00",
+      token: "token default",
+      refreshToken: "refresh default",
+    },
+  });
   // Creo una variable que contiene la hora de expiracion en base a la hora de creacion del token
-  let timeDBExpiration = moment(tokenValidated.time)
+  let timeDBExpiration = moment(tokenValidated.time ?? created.time)
     .add(2, "h")
     .format("YYYY-M-DD HH:mm:ss");
   //Creo una variable con la hora actual para las evaluaciones
   let newTime = new Date().toISOString().slice(0, 19).replace("T", " ");
   // creo una variable con la hora de expiracion del token menos 10min para poder hacer un refresh del mismo
 
-  let timeRefresh = moment(tokenValidated.time)
+  let timeRefresh = moment(tokenValidated.time ?? created.time)
     .add(1, "h")
     .add(50, "m")
     .format("YYYY-M-DD HH:mm:ss");
   // Verifico que sea menor que la hora y que sea menor que la hora de expiración menos diez minutos
 
-  if (tokenValidated === null) {
-    // si no existe toquen pido uno nuevo (cuando se resetea la base de datos)
-    getToken(next);
-  } else if (
+  if (
     moment(newTime).isBefore(timeDBExpiration) &&
     moment(newTime).isBefore(timeRefresh)
   ) {
-    // si existe uno y es menor que la hora de expiracion y menor que la hora de exiparacion -10 min solo retorno next
+    // si existe uno y es menor que la hora de expiracion y menor que la hora de expiracion -10 min solo retorno next
     return next();
   } else if (
     moment(newTime).isBefore(timeDBExpiration) &&
     moment(newTime).isAfter(timeRefresh)
   ) {
     // Verifico si esta dentro del margen de 10 min antes de vencer el token para ver si puedo refrescarlo y no tener que crear otro
-    refreshToken(tokenValidated, next);
+    refreshToken(tokenValidated);
+    next();
   } else {
     //si existe pero esta vencido pido uno nuevo
-    getToken(tokenValidated, next);
+    getToken(tokenValidated);
+    next();
   }
-  return next();
+  next();
 });
 
-async function getToken(tokenValidated, next) {
+async function getToken(tokenValidated) {
   // objeto de parametros para el sing
-
   let paramsSing = {
     app_key: APP_KEY,
     expires_in: 7200,
@@ -93,25 +97,21 @@ async function getToken(tokenValidated, next) {
     },
     params: urlencoded,
   };
-  console.log("esta pór hacer la peticion");
 
   axios("http://open.10000track.com/route/rest", requestOptions)
     .then((response) => {
-      console.log(response.data);
       const newToken = tokenValidated.update({
         time: response.data.result.time,
         token: response.data.result.accessToken,
         refreshToken: response.data.result.refreshToken,
       });
-      return next();
     })
     .catch(function (error) {
       console.error(error.data);
     });
-  return next();
 }
 
-async function refreshToken(tokenValidated, next) {
+async function refreshToken(tokenValidated) {
   let paramsSing = {
     app_key: APP_KEY,
     timestamp: new Date().toISOString().slice(0, 19).replace("T", " "),
@@ -159,18 +159,15 @@ async function refreshToken(tokenValidated, next) {
   //hago la peticion y devuelvo la info a postman
   axios("http://open.10000track.com/route/rest", requestOptions)
     .then((response) => {
-      console.log(response.data);
       const refreshToken = tokenValidated.update({
         time: response.data.result.time,
         token: response.data.result.accessToken,
         refreshToken: response.data.result.refreshToken,
       });
-      return next();
     })
     .catch((error) => {
       console.error(error.data);
     });
-  return next();
 }
 
 module.exports = router;
