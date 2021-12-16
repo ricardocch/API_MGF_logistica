@@ -6,50 +6,54 @@ const utf8 = require("utf8");
 const { USER_ID, PASSWORD_MD5, APP_KEY, APP_SECRET } = process.env;
 const { Token } = require("../db");
 const moment = require("moment");
-let tokenValidated = "";
 
 router.use(async function (req, res, next) {
   // Busco el token en la base de datos
-  tokenValidated = await Token.findByPk(1);
-  let timeDBExpiration = moment(tokenValidated.time)
+  const [tokenValidated, created] = await Token.findOrCreate({
+    where: { id: 1 },
+    defaults: {
+      time: "2021-01-01 00:00:00",
+      token: "token default",
+      refreshToken: "refresh default",
+    },
+  });
+  // Creo una variable que contiene la hora de expiracion en base a la hora de creacion del token
+  let timeDBExpiration = moment(tokenValidated.time ?? created.time)
     .add(2, "h")
     .format("YYYY-M-DD HH:mm:ss");
+  //Creo una variable con la hora actual para las evaluaciones
   let newTime = new Date().toISOString().slice(0, 19).replace("T", " ");
-  let timeRefresh = moment(tokenValidated.time)
+  // creo una variable con la hora de expiracion del token menos 10min para poder hacer un refresh del mismo
+
+  let timeRefresh = moment(tokenValidated.time ?? created.time)
     .add(1, "h")
     .add(50, "m")
     .format("YYYY-M-DD HH:mm:ss");
-  console.log("primera funcion");
   // Verifico que sea menor que la hora y que sea menor que la hora de expiración menos diez minutos
 
-  if (tokenValidated === null) {
-    console.log("GET TOKEN por undefined");
-    getToken();
-  } else if (
+  if (
     moment(newTime).isBefore(timeDBExpiration) &&
     moment(newTime).isBefore(timeRefresh)
   ) {
-    console.log("valido que el token de la api ya existe");
+    // si existe uno y es menor que la hora de expiracion y menor que la hora de expiracion -10 min solo retorno next
     return next();
-    // Verifico si esta dentro del margen de 10 min antes de vencer el token para ver si puedo refrescarlo y no tener que crear otro
   } else if (
     moment(newTime).isBefore(timeDBExpiration) &&
     moment(newTime).isAfter(timeRefresh)
   ) {
+    // Verifico si esta dentro del margen de 10 min antes de vencer el token para ver si puedo refrescarlo y no tener que crear otro
     refreshToken(tokenValidated);
+    next();
   } else {
-    console.log("GET TOKEN por ultimo else");
-
-    //En ultima instancia creo uno nuevo
+    //si existe pero esta vencido pido uno nuevo
     getToken(tokenValidated);
+    next();
   }
   next();
 });
 
 async function getToken(tokenValidated) {
   // objeto de parametros para el sing
-  console.log("entró en getToken");
-
   let paramsSing = {
     app_key: APP_KEY,
     expires_in: 7200,
@@ -93,24 +97,9 @@ async function getToken(tokenValidated) {
     },
     params: urlencoded,
   };
-  console.log("esta pór hacer la peticion");
 
-  // hago la peticion y devuelvo la info a postman
-  // axios("http://open.10000track.com/route/rest", requestOptions)
-  //   .then((response) => {
-  //     console.log("data de la peticion", response.data);
-  //     const updateToken = Token.create({
-  //       time: response.data.result.time,
-  //       token: response.data.result.accessToken,
-  //       refreshToken: response.data.result.refreshToken,
-  //     });
-  //   })
-  //   .catch(function (error) {
-  //     console.log(error.data);
-  //   });
   axios("http://open.10000track.com/route/rest", requestOptions)
     .then((response) => {
-      console.log(response.data);
       const newToken = tokenValidated.update({
         time: response.data.result.time,
         token: response.data.result.accessToken,
@@ -118,7 +107,7 @@ async function getToken(tokenValidated) {
       });
     })
     .catch(function (error) {
-      res.send(error.data);
+      console.error(error.data);
     });
 }
 
@@ -170,7 +159,6 @@ async function refreshToken(tokenValidated) {
   //hago la peticion y devuelvo la info a postman
   axios("http://open.10000track.com/route/rest", requestOptions)
     .then((response) => {
-      console.log(response.data);
       const refreshToken = tokenValidated.update({
         time: response.data.result.time,
         token: response.data.result.accessToken,
@@ -178,7 +166,7 @@ async function refreshToken(tokenValidated) {
       });
     })
     .catch((error) => {
-      console.log(error.data);
+      console.error(error.data);
     });
 }
 

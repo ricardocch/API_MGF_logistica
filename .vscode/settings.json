@@ -5,5 +5,11 @@
     "titleBar.activeForeground": "#ECFEF2"
   },
   "cSpell.words": ["cuit"],
-  "cSpell.ignoreWords": ["hasheado"]
+  "cSpell.ignoreWords": [
+    "deleteuser",
+    "hasheado",
+    "imei",
+    "licenseplate",
+    "updatepass"
+  ]
 }

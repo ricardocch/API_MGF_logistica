@@ -1,20 +1,24 @@
 const { default: axios } = require("axios");
-const routerAccountList = Router();
+const { Router } = require("express");
 const Md5 = require("md5");
 const utf8 = require("utf8");
-const { USER_ID, PASSWORD_MD5, APP_KEY, APP_SECRET } = process.env;
+const { APP_KEY, APP_SECRET } = process.env;
+const { Token } = require("../../db");
+const router = Router();
 
-routerAccountList.post("/account-list", function (req, res) {
+router.post("/", async function (req, res) {
+  const tokenPassword = await Token.findByPk(1);
+
   // objeto de parametros para el sing
   let paramsSing = {
-    app_key: "8FB345B8693CCD0071EC1A2E4EB83F57",
+    app_key: APP_KEY,
     timestamp: new Date().toISOString().slice(0, 19).replace("T", " "),
     format: "json",
-    method: "jimi.oauth.token.get",
+    method: "jimi.track.device.detail",
     v: "1.0",
     sign_method: "md5",
-    access_token: "",
-    target: "",
+    access_token: tokenPassword.token,
+    imei: "862798050059324",
   };
 
   //str de parametros ordenados alfabeticamente y unidos
@@ -22,21 +26,20 @@ routerAccountList.post("/account-list", function (req, res) {
     Object.entries(paramsSing).sort().join().replace(/,/g, "")
   );
   //genero el sign concatenando los datos, "hasheado" con md5 y modificando todo eso a mayusculas
-  let app_secret = "a11c15c35f0d43f3ae423748f3568451";
+  let app_secret = APP_SECRET;
   const sign = Md5(app_secret + temp + app_secret).toUpperCase();
 
   // creo la query de parametros de la peticion
-  var urlencoded = new URLSearchParams(paramsSing).toString();
+  let urlencoded = new URLSearchParams();
   urlencoded.append("sign", sign);
-  // urlencoded.append("app_key", paramsSing.app_key);
-  // urlencoded.append("expires_in", paramsSing.expires_in);
-  // urlencoded.append("format", paramsSing.format);
-  // urlencoded.append("v", paramsSing.v);
-  // urlencoded.append("method", paramsSing.method);
-  // urlencoded.append("user_pwd_md5", paramsSing.user_pwd_md5);
-  // urlencoded.append("sign_method", paramsSing.sign_method);
-  // urlencoded.append("user_id", paramsSing.user_id);
-  // urlencoded.append("timestamp", paramsSing.timestamp);
+  urlencoded.append("app_key", paramsSing.app_key);
+  urlencoded.append("format", paramsSing.format);
+  urlencoded.append("v", paramsSing.v);
+  urlencoded.append("method", paramsSing.method);
+  urlencoded.append("sign_method", paramsSing.sign_method);
+  urlencoded.append("access_token", paramsSing.access_token);
+  urlencoded.append("timestamp", paramsSing.timestamp);
+  urlencoded.append("imei", paramsSing.imei);
 
   // objeto que define las propiedades de la peticion
   var requestOptions = {
@@ -60,6 +63,4 @@ routerAccountList.post("/account-list", function (req, res) {
     });
 });
 
-module.exports = {
-  routerAccountList,
-};
+module.exports = router;

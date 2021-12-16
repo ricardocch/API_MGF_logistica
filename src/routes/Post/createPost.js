@@ -1,57 +1,118 @@
 const { Router } = require("express");
-const {sendMail} = require("../../controllers/email.js")
-const {User , LicensePlate ,Post ,Driver } = require('../../db.js')
-var bcrypt = require('bcryptjs');
+const { sendMail } = require("../../controllers/email.js");
+const { User, LicensePlate, Post, Driver } = require("../../db.js");
+var bcrypt = require("bcryptjs");
 const router = Router();
 
-router.post('/',async (req,res)=>{    
-   
-    const {
-        user,          
-        date,
-        roadMap,
-        origin,
-        destination,
-        departureTime,
-        arrivalTime,
-        video,
-        licensePlate,
-        driver
+const { default: axios } = require("axios");
+const Md5 = require("md5");
+const utf8 = require("utf8");
+const { APP_KEY, APP_SECRET } = process.env;
+const { Token } = require("../../db");
 
-    }= req.body
+router.post("/", async (req, res) => {
+  const {
+    user,
+    date,
+    roadMap,
+    origin,
+    destination,
+    departureTime,
+    arrivalTime,
+    video,
+    licensePlate,
+    driver,
+    operator,
+  } = req.body;
 
-    try{ 
+  const tokenPassword = await Token.findByPk(1);
 
-        const foundUser = await User.findOne({
-            where: {user:user}
-        })
+  // objeto de parametros para el sing
+  let paramsSing = {
+    app_key: APP_KEY,
+    timestamp: new Date().toISOString().slice(0, 19).replace("T", " "),
+    format: "json",
+    method: "jimi.device.track.list",
+    v: "1.0",
+    sign_method: "md5",
+    access_token: tokenPassword.token,
+    imei: "862798050059324",
+    map_type: "GOOGLE",
+    begin_time: "2021-12-13 18:12:00",
+    end_time: "2021-12-13 18:13:00",
+  };
+  //str de parametros ordenados alfabeticamente y unidos
+  let temp = utf8.encode(
+    Object.entries(paramsSing).sort().join().replace(/,/g, "")
+  );
+  //genero el sign concatenando los datos, "hasheado" con md5 y modificando todo eso a mayusculas
+  let app_secret = APP_SECRET;
+  const sign = Md5(app_secret + temp + app_secret).toUpperCase();
+  // creo la query de parametros de la peticion
+  let urlencoded = new URLSearchParams();
+  urlencoded.append("sign", sign);
+  urlencoded.append("app_key", paramsSing.app_key);
+  urlencoded.append("timestamp", paramsSing.timestamp);
+  urlencoded.append("format", paramsSing.format);
+  urlencoded.append("method", paramsSing.method);
+  urlencoded.append("v", paramsSing.v);
+  urlencoded.append("sign_method", paramsSing.sign_method);
+  urlencoded.append("access_token", paramsSing.access_token);
+  urlencoded.append("imei", paramsSing.imei);
+  urlencoded.append("end_time", paramsSing.end_time);
+  urlencoded.append("begin_time", paramsSing.begin_time);
+  urlencoded.append("map_type", paramsSing.map_type);
+  var requestOptions = {
+    method: "POST",
+    Accept: "application/json",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      "Context-Type": "application/json charset=utf-8",
+      "User-Agent": "axios/0.24.0",
+    },
+    params: urlencoded,
+  };
 
-        const foundDriver = await Driver.findOne({
-            where: {name:driver}
-        })
-        const foundLicense = await LicensePlate.findOne({
-            where: {name:licensePlate}
-        })
+  let coords = "";
 
+  //hago la peticion y devuelvo la info a postman
+  axios("http://open.10000track.com/route/rest", requestOptions)
+    .then((response) => {
+      coords = response.data.result[0];
+    })
+    .catch(function (error) {
+      throw new Error(error.data);
+    });
 
-        const post = await Post.create({
-            date:date,
-            roadMap:roadMap,
-            origin:origin,
-            destination:destination,
-            departureTime:departureTime,
-            arrivalTime:arrivalTime,
-            video:video
-        })
-        await Post.add(foundUser, foundDriver, foundLicense)
-        
+  try {
+    const foundUser = await User.findOne({
+      where: { user: user },
+    });
 
-           
-        res.status(201).json({msg:'Post Was successfully created'})  
-        }catch(err){       
-        console.log(err)
-        res.status(404).send(err)
-    }
-})
+    const foundDriver = await Driver.findOne({
+      where: { name: driver },
+    });
+    const foundLicense = await LicensePlate.findOne({
+      where: { name: licensePlate },
+    });
 
-module.exports=router
+    const post = await Post.create({
+      date: date,
+      roadMap: roadMap,
+      origin: origin,
+      destination: destination,
+      departureTime: departureTime,
+      arrivalTime: arrivalTime,
+      video: video,
+      author: operator,
+    });
+    await Post.add(foundUser, foundDriver, foundLicense);
+
+    res.status(201).json({ msg: "Post Was successfully created" });
+  } catch (err) {
+    console.log(err);
+    res.status(404).send(err);
+  }
+});
+
+module.exports = router;

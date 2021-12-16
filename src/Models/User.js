@@ -12,7 +12,7 @@ module.exports = (sequelize) => {
       user: {
         type: DataTypes.STRING,
         allowNull: false,
-      },     
+      },
       password: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -30,7 +30,6 @@ module.exports = (sequelize) => {
         allowNull: false,
         defaultValue: true,
       },
-     
     },
     {
       timestamps: false,

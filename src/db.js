@@ -1,5 +1,4 @@
 require("dotenv").config();
-// const { Token } = require("./src/db");
 const { Sequelize } = require("sequelize");
 const fs = require("fs");
 const path = require("path");
@@ -20,7 +19,7 @@ const modelDefiners = [];
 fs.readdirSync(path.join(__dirname, "/Models"))
   .filter(
     (file) =>
-      file.indexOf(".") !== 0 && file !== basename && file.slice(-3) === ".js" 
+      file.indexOf(".") !== 0 && file !== basename && file.slice(-3) === ".js"
   )
   .forEach((file) => {
     modelDefiners.push(require(path.join(__dirname, "/Models", file)));
@@ -37,14 +36,13 @@ let capsEntries = entries.map((entry) => [
 sequelize.models = Object.fromEntries(capsEntries);
 // En sequelize.models están todos los modelos importados como propiedades
 //Para relacionarlos hacemos un destructuring
-const { User, LicensePlate, Post, Driver} = sequelize.models;
+const { User, LicensePlate, Post, Driver } = sequelize.models;
 
 // Aca vendrian las relaciones
-User.hasMany(Post);
-Post.belongsTo(User)
-Post.hasOne(Driver)
-Post.hasOne(LicensePlate)
-
+User.belongsToMany(Post, { through: "user_post" });
+Post.hasOne(User);
+Post.hasOne(Driver);
+Post.hasOne(LicensePlate);
 
 module.exports = {
   ...sequelize.models, // para poder importar los modelos así: const { Product, User } = require('./db.js');
