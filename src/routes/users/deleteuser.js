@@ -1,15 +1,16 @@
 const { Router } = require("express");
 const router = Router();
-const bcrypt = require("bcrypt");
-const { User, LicensePlate } = require("../../db");
+const bcrypt = require("bcryptjs");
+const { User, LicensePlate } = require("../../db.js");
 
-router.delete("/delete", async function (req, res) {
+router.put("/", async function (req, res) {
+  console.log(User);
   try {
     await User.update(
       { active: false },
       {
         where: {
-          name: req.body.user,
+          user: req.body.user,
         },
       }
     );
@@ -18,5 +19,3 @@ router.delete("/delete", async function (req, res) {
     res.status(500).send({ err });
   }
 });
-
-module.exports = router;

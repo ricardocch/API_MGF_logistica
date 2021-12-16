@@ -9,10 +9,10 @@ module.exports = (sequelize) => {
         autoIncrement: true,
         primaryKey: true,
       },
-      name: {
+      user: {
         type: DataTypes.STRING,
         allowNull: false,
-      },
+      },     
       password: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -30,15 +30,7 @@ module.exports = (sequelize) => {
         allowNull: false,
         defaultValue: true,
       },
-      phone: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      cuit: {
-        type: DataTypes.STRING,
-        unique: true,
-        allowNull: false,
-      },
+     
     },
     {
       timestamps: false,

@@ -18,6 +18,7 @@ router.use(async function (req, res, next) {
   //Creo una variable con la hora actual para las evaluaciones
   let newTime = new Date().toISOString().slice(0, 19).replace("T", " ");
   // creo una variable con la hora de expiracion del token menos 10min para poder hacer un refresh del mismo
+
   let timeRefresh = moment(tokenValidated.time)
     .add(1, "h")
     .add(50, "m")
@@ -48,7 +49,6 @@ router.use(async function (req, res, next) {
 
 async function getToken(tokenValidated, next) {
   // objeto de parametros para el sing
-  console.log("entró en getToken");
 
   let paramsSing = {
     app_key: APP_KEY,

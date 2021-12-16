@@ -1,19 +1,19 @@
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
-const bcrypt = require("bcrypt");
+
+const bcrypt = require("bcryptjs");
 const createToken = require("jsonwebtoken");
-const config = require("./configToken/config");
+require("dotenv").config();
 const indexUserModel = require("./src/db.js");
 const server = express();
-const routes = require("./src/routes/index");
+const routes = require("./src/routes/index.js");
 const authenticationToken = require("./src/controllers/token-jimi");
 
-// server.use(express.urlencoded({ extended: true }));
-// server.use('/', routes)
-
+server.use(express.urlencoded({ extended: true }));
 const auth = express();
-server.set("llave", config.llave);
+server.set("llave", process.env.JWT);
+
 server.use(cors());
 server.use(morgan("dev"));
 server.use(express.json());
@@ -29,7 +29,7 @@ server.use((err, req, res, next) => {
 
 server.post("/login", async (req, res) => {
   let instanceUser = await indexUserModel.User.findOne({
-    where: { name: req.body.username },
+    where: { user: req.body.username },
   });
 
   if (instanceUser === null) {
@@ -71,6 +71,16 @@ auth.use(function (req, res, next) {
     });
   }
 });
-server.use("/", authenticationToken, routes);
-// server.use("/", auth, routes);
+
+//ruta para ignorar middlewares
+//server.use("/", routes);
+
+//ruta para probar token jwt
+server.use("/", auth, routes);
+
+//ruta para probar refresh api token
+// server.use("/", authenticationToken, routes);
+
+//ruta ambos middlewares
+// server.use("/", [auth,authenticationToken], routes);
 module.exports = server;

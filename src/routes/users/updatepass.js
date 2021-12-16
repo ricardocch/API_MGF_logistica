@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const router = Router();
-const bcrypt = require("bcrypt");
-const { User, LicensePlate } = require("../../db");
+const bcrypt = require("bcryptjs");
+const { User, LicensePlate } = require("../../db.js");
 
 router.post("/", async (req, res) => {
   try {
@@ -9,9 +9,10 @@ router.post("/", async (req, res) => {
 
     const user = await User.findOne({
       where: {
-        name: username,
+        user: username,
       },
     });
+
     if (!user) {
       throw "Username does not exist.";
     }
