@@ -1,0 +1,15 @@
+{
+  "workbench.colorCustomizations": {
+    "activityBar.background": "#023614",
+    "titleBar.activeBackground": "#034B1C",
+    "titleBar.activeForeground": "#ECFEF2"
+  },
+  "cSpell.words": ["cuit"],
+  "cSpell.ignoreWords": [
+    "deleteuser",
+    "hasheado",
+    "imei",
+    "licenseplate",
+    "updatepass"
+  ]
+}
