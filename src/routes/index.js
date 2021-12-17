@@ -40,16 +40,16 @@ router.use("/post/listPost", listPost);
 
 /* --------------------------------JIMI API-------------------------------- */
 
-const accountList = require("./Api-Jimi/count-list-route");
-const detailsInformation = require("./Api-Jimi/details-information-route");
-const videoUrlHistory = require("./Api-Jimi/video-url-history");
-const coordsOfDay = require("./Api-Jimi/coords-of-day");
-const videoOfDay = require("./Api-Jimi/video-of-day");
-router.use("/account-list", accountList);
-router.use("/detail-information", detailsInformation);
-router.use("/coords-of-day", coordsOfDay);
-router.use("/video-of-day", videoOfDay);
-router.use("/video-url-history", videoUrlHistory);
+// const accountList = require("./Api-Jimi/count-list-route");
+// const detailsInformation = require("./Api-Jimi/details-information-route");
+// const videoUrlHistory = require("./Api-Jimi/video-url-history");
+// const coordsOfDay = require("./Api-Jimi/coords-of-day");
+// const videoOfDay = require("./Api-Jimi/video-of-day");
+// router.use("/account-list", accountList);
+// router.use("/detail-information", detailsInformation);
+// router.use("/coords-of-day", coordsOfDay);
+// router.use("/video-of-day", videoOfDay);
+// router.use("/video-url-history", videoUrlHistory);
 
 /* --------------------------------JIMI API-------------------------------- */
 
