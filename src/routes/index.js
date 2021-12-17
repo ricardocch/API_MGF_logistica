@@ -53,4 +53,14 @@ router.use("/video-url-history", videoUrlHistory);
 
 /* --------------------------------JIMI API-------------------------------- */
 
+
+/* --------------------------------Video-------------------------------- */
+
+const upload = require("./Video/Upload");
+const url = require("./Video/Url");
+router.use("/video/upload", upload);
+router.use("/video/URL", url);
+
+/* --------------------------------Video-------------------------------- */
+
 module.exports = router;
