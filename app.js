@@ -73,13 +73,13 @@ auth.use(function (req, res, next) {
 });
 
 //ruta para ignorar middleware
-//server.use("/", routes);
+server.use("/", routes);
 
 //ruta para probar token jwt
 // server.use("/", auth, routes);
 
 //ruta para probar refresh api token
-server.use("/", authenticationToken, routes);
+// server.use("/", authenticationToken, routes);
 
 //ruta ambos middlewares
 // server.use("/", [auth, authenticationToken], routes);
