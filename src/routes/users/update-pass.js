@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const router = Router();
 const bcrypt = require("bcryptjs");
-const { User, LicensePlate } = require("../../db.js");
+const { User } = require("../../db.js");
 
 router.post("/", async (req, res) => {
   try {
@@ -37,7 +37,6 @@ router.post("/", async (req, res) => {
       return res.status(200).send("Password modified.");
     }
   } catch (err) {
-    console.log(err);
     res.status(404).send(err);
   }
 });

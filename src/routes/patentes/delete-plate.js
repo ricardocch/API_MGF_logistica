@@ -1,18 +1,18 @@
 const { Router } = require("express");
 const router = Router();
-const { User } = require("../../db.js");
+const { LicensePlate } = require("../../db.js");
 
 router.put("/", async function (req, res) {
   try {
-    await User.update(
+    await LicensePlate.update(
       { active: false },
       {
         where: {
-          user: req.body.user,
+          name: req.body.license,
         },
       }
     );
-    res.status(200).send({ msg: "Usuario eliminado con exito" });
+    res.status(200).send({ msg: "Successfully deleted" });
   } catch (err) {
     res.status(500).send({ err });
   }

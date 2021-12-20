@@ -3,40 +3,51 @@ const router = Router();
 
 /* --------------------------------USERS-------------------------------- */
 const user = require("./Users/createUser");
-const modify = require("./Users/updatepass");
+const modify = require("./users/update-pass");
 const deleted = require("./Users/deleteuser");
-const typeUser = require("./Users/typeUser");
-const listUser = require("./Users/listUser");
+// const typeUser = require("./Users/typeUser");  EN DESUSO 18/12 Para borrar?
+const listUser = require("./users/list-user");
+const updatePass = require("./users/update-pass");
+const updateEmail = require("./users/update-email");
 router.use("/user/create", user);
 router.use("/user/update", modify);
 router.use("/user/delete", deleted);
-router.use("/user", listUser);
+router.use("/user/:username", listUser);
+router.use("/user/update/passWord", updatePass);
+router.use("/user/update/email", updateEmail);
 /* --------------------------------USERS-------------------------------- */
 
 /* --------------------------------DRIVERS-------------------------------- */
-const createDriver = require("./Drivers/createDriver");
-const deleteDriver = require("./Drivers/deleteDriver");
-const drivers = require("./Drivers/listDriver");
+const createDriver = require("./conductores/create-driver");
+const deleteDriver = require("./conductores/delete-driver");
+const drivers = require("./conductores/list-driver");
 router.use("/driver/create", createDriver);
 router.use("/driver/delete", deleteDriver);
 router.use("/driver", drivers);
 /* --------------------------------DRIVERS-------------------------------- */
 
 /* --------------------------------LicensePlate-------------------------------- */
-const createLPlate = require("./LicensePlate/createLPlate");
-const deleteLPlate = require("./LicensePlate/deleteLPlate");
-const lPlate = require("./LicensePlate/listLPlate");
+const createLPlate = require("./patentes/create-plate");
+const deleteLPlate = require("./patentes/delete-plate");
+const lPlate = require("./patentes/list-plate");
 router.use("/licenseplate/create", createLPlate);
 router.use("/licenseplate/delete", deleteLPlate);
 router.use("/licenseplate", lPlate);
 /* --------------------------------LicensePlate--------------------------------*/
 
 /* --------------------------------Post-------------------------------- */
-const createPost = require("./Post/createPost");
-const listPost = require("./Post/listPost");
+const createPost = require("./posteos/create-post");
+const listPost = require("./posteos/list-post");
 router.use("/post/create", createPost);
-router.use("/post/listPost", listPost);
+router.use("/post/listPost/:user/:admin", listPost);
 /* --------------------------------Post-------------------------------- */
+
+/* --------------------------------Historial-------------------------------- */
+const listHistorial = require("./historial/historial-list");
+const createHistorial = require("./historial/create-historial");
+router.use("/historial/listHistorial", listHistorial);
+router.use("/historial/createHistorial", createHistorial);
+/* --------------------------------Historial-------------------------------- */
 
 /* --------------------------------JIMI API-------------------------------- */
 
@@ -52,7 +63,6 @@ router.use("/post/listPost", listPost);
 // router.use("/video-url-history", videoUrlHistory);
 
 /* --------------------------------JIMI API-------------------------------- */
-
 
 /* --------------------------------Video-------------------------------- */
 

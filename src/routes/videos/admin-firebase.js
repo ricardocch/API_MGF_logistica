@@ -1,5 +1,5 @@
 const firebaseAdmin = require('firebase-admin');
-const serviceAccount = require('./../../../firbase/mgflogisitica-firebase-adminsdk.json');
+const serviceAccount = require('../../../firbase/mgflogisitica-firebase-adminsdk.json');
 // firebase.initializeApp(firebaseConfig);
 
 //se inicializa firebase aqui, porque solo puede ser inicializado una vez en toda la Api
