@@ -8,7 +8,7 @@ const {
 const { sendMail } = require("../../controllers/email.js");
 const router = Router();
 // este modulo inicializa firebase
-const admin = require("./adminFirebase.js");
+const admin = require("./admin-firebase.js");
 
 router.post("/", async (req, res) => {
   const { video, name } = req.body;
