@@ -4,7 +4,7 @@
   "description": "PF MGF Logistica",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon index.js",
+    "start": "node index.js",
     "test": "npm test"
   },
   "repository": {
