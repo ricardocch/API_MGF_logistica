@@ -7,7 +7,7 @@ const { v4: uuidv4 } = require("uuid");
 module.exports = {
   download: async function (url) {
     //Se verifica que las url enviadas al enpoint sean mayor a 0
-    console.log("url",  typeof url);
+    console.log("url",  url.length);
     console.log("array",  Array.isArray(url) );
     if (url.length) {
       let arrPromise = [];
