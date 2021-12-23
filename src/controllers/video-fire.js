@@ -77,8 +77,8 @@ module.exports = {
 
       return 200;
     } catch (err) {
-      // console.log(err);
-      return res.status(503).send(err);
+      console.log(err);
+      return 503;
     }
   },
   upload: async function (name, admin) {
