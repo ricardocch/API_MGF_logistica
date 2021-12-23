@@ -35,7 +35,7 @@ router.post("/", async (req, res) => {
 
     if (url === 504) {
       await deleteVideo();
-      return res.status(501).send({ err: "Fallo en subida a fireba" });
+      return res.status(501).send({ err: "Fallo en subida a firebase" });
     }
 
     // se borran los videos para no ocupar espacio en el servidor

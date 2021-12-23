@@ -77,7 +77,7 @@ module.exports = {
 
       return 200;
     } catch (err) {
-      console.log(err);
+      // console.log(err);
       return res.status(503).send(err);
     }
   },
