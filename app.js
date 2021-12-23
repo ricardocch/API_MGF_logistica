@@ -39,7 +39,7 @@ server.post("/login", async (req, res) => {
         check: true,
       };
       const token = createToken.sign(payload, server.get("llave"), {
-        expiresIn: 1440,
+        expiresIn: "2 days",
       });
       res.json({
         mensaje: "Autenticación correcta",
