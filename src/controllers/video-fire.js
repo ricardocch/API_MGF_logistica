@@ -7,10 +7,11 @@ const { v4: uuidv4 } = require("uuid");
 module.exports = {
   download: async function (url) {
     //Se verifica que las url enviadas al enpoint sean mayor a 0
-    console.log("url",  url.length);
-    console.log("array",  Array.isArray(url) );
+    console.log("antes");
     if (url.length) {
       let arrPromise = [];
+      console.log("url",  url.length);
+      console.log("array",  Array.isArray(url) );
       // se hace un arreglo de promesas para traer todos los buffer del server de JIMI
       arrPromise = url.map((el) =>
         axios({
