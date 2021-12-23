@@ -15,6 +15,7 @@ router.post("/", async (req, res) => {
 
   try {
     //Se descargan los videos desde el servidor de Jimi
+    console.log(video);
     let flag = await download(video);
     if (flag === 501)
       return res.status(501).send({ err: "No se obtuvieron url" });
