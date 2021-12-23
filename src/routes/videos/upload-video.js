@@ -47,8 +47,8 @@ router.post("/", async (req, res) => {
         .send({ err: "Archivo subido Fallo en borrado de archivos" });
 
     res.send({ msg: "Se completo con exito", url });
-  } catch {
-    return res.status(501).send({ err: "algo falló" });
+  } catch (err) {
+    return res.status(501).send(err);
   }
 });
 
