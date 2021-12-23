@@ -48,7 +48,8 @@ router.post("/", async (req, res) => {
 
     res.send({ msg: "Se completo con exito", url });
   } catch (err) {
-    return res.status(501).send(err);
+    console.log(err);
+    return res.status(509).send({"msg":"error",err});
   }
 });
 
