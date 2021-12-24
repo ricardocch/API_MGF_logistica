@@ -25,21 +25,21 @@ router.post("/", async (req, res) => {
       throw new Error("user must only have numbers and letters");
     }
 
-    let [instanceUser, userCreated] = await User.findOrCreate({
-      where: { user: user },
-      defaults: {
-        user: user,
-        password: pass,
-        email: email,
-        admin: admin,
-      },
-    });
+    // let [instanceUser, userCreated] = await User.findOrCreate({
+    //   where: { user: user },
+    //   defaults: {
+    //     user: user,
+    //     password: pass,
+    //     email: email,
+    //     admin: admin,
+    //   },
+    // });
 
-    if (userCreated) {
+    if (true) {
       try {
         // envio mail confirmacion
         let respMail = await sendMail(
-          instanceUser.email,
+          "ricardohdz2408@gmail.com",
           "Usuario creado",
           "Su usuario en MGF Logistica se ha creado con éxito"
         );
