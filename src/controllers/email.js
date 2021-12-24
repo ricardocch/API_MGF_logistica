@@ -10,7 +10,8 @@ module.exports = {
         //las credenciales se configuran el .env
         let configMail = {
           host: "smtp.gmail.com",
-          port: 2525,
+          port: 465,
+          secure:true,
           auth: {
             user: process.env.SMTP_USER,
             pass: process.env.SMTP_PASSWORD
