@@ -9,7 +9,7 @@ module.exports = {
         //configuracion de smtp
         //las credenciales se configuran el .env
         let configMail = {
-          host: "smtp.mailtrap.io",
+          host: "smtp.gmail.com",
           port: 2525,
           auth: {
             user: process.env.SMTP_USER,
