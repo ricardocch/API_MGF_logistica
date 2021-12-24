@@ -8,6 +8,7 @@ module.exports = {
         const nodemailer = require('nodemailer');
         //configuracion de smtp
         //las credenciales se configuran el .env
+        console.log("smtp",process.env.SMTP_USER);
         let configMail = {
           host: "smtp.gmail.com",
           port: 465,
