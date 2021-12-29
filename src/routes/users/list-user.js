@@ -3,7 +3,7 @@ const router = Router();
 const { Op } = require("sequelize");
 const { User, LicensePlate } = require("../../db.js");
 
-router.get("/", async function (req, res) {
+router.get("/:username", async function (req, res) {
   try {
     let userAdminInstance = await User.findOne({
       where: {
@@ -14,7 +14,7 @@ router.get("/", async function (req, res) {
     let userInstance = [];
 
     if (userAdminInstance === null) {
-      return res.status(500).send({ err: "usuario no exste" });
+      return res.status(500).send({ err: "usuario no existe" });
     } //si es sa vera todos los usuarios que no sean el
     else if (userAdminInstance.admin === "sa") {
       userInstance = await User.findAll({
@@ -48,7 +48,7 @@ router.get("/", async function (req, res) {
 
     return res.send(userJSON);
   } catch (err) {
-    res.status(500).send({ err });
+    res.status(500).send({ err: err });
   }
 });
 
