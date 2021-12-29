@@ -3,11 +3,11 @@ const router = Router();
 const { Op } = require("sequelize");
 const { User, LicensePlate } = require("../../db.js");
 
-router.get("/:username", async function (req, res) {
+router.post("/", async function (req, res) {
   try {
     let userAdminInstance = await User.findOne({
       where: {
-        user: req.params.user,
+        user: req.body.user,
       },
     });
     // se declara inicializa en caso de que no haya usuarios no rompa el servidor
