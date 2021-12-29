@@ -12,7 +12,7 @@ const updateEmail = require("./users/update-email");
 router.use("/user/create", user);
 router.use("/user/update", modify);
 router.use("/user/delete", deleted);
-router.use("/user/list/", listUser);
+router.use("/user/list", listUser);
 router.use("/user/update/passWord", updatePass);
 router.use("/user/update/email", updateEmail);
 /* --------------------------------USERS-------------------------------- */
