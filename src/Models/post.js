@@ -32,6 +32,10 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    video: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     author: {
       type: DataTypes.STRING,
       allowNull: false,
