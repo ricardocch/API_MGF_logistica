@@ -41,9 +41,9 @@ router.post("/", async (req, res) => {
       author: operator,
     });
 
-    const prueba = await post.addUser(foundUser);
-    const prueba2 = await post.addDriver(foundDriver);
-    const prueba3 = await post.addLicensePlate(foundLicense);
+    const prueba = await post.add(foundUser);
+    const prueba2 = await post.add(foundDriver);
+    const prueba3 = await post.add(foundLicense);
     // const bindElementos = await Promise.all([
     //   post.addUser(foundUser),
     //   post.addDriver(foundDriver),
