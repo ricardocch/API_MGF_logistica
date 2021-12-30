@@ -14,7 +14,6 @@ router.post("/", async (req, res) => {
     arrivalTime,
     licensePlate,
     driver,
-    video,
     operator,
   } = req.body;
 
@@ -37,7 +36,6 @@ router.post("/", async (req, res) => {
       destination: destination,
       departureTime: departureTime,
       arrivalTime: arrivalTime,
-      video: video,
       author: operator,
     });
 
