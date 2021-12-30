@@ -42,10 +42,9 @@ sequelize.models = Object.fromEntries(capsEntries);
 const { User, LicensePlate, Post, Driver } = sequelize.models;
 
 // Acá vendrían las relaciones
-User.hasMany(Post, { foreignKey: "userId_postId" });
-Post.belongsTo(User, { foreignKey: "userId_postId", target: "id" });
-Post.belongsTo(Driver, { foreignKey: "driverId_postId", target: "id" });
-Post.belongsTo(LicensePlate, { foreignKey: "licenseId_postId", target: "id" });
+User.hasMany(Post);
+Driver.hasMany(Post);
+LicensePlate.hasMany(Post);
 
 module.exports = {
   ...sequelize.models, // para poder importar los modelos así: const { Product, User } = require('./db.js');
