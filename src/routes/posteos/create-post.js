@@ -39,15 +39,9 @@ router.post("/", async (req, res) => {
       author: operator,
     });
 
-    const prueba = await post.addUser(foundUser);
-    const prueba2 = await post.addDriver(foundDriver);
-    const prueba3 = await post.addLicensePlate(foundLicense);
-    // const bindElementos = await Promise.all([
-    //   post.addUser(foundUser),
-    //   post.addDriver(foundDriver),
-    //   post.addLicensePlate(foundLicense),
-    // ]);
-
+    await foundUser.addPost(post);
+    await post.addDriver(foundDriver);
+    await post.addLicensePlate(foundLicense);
     res.status(201).json({
       msg: "Post Was successfully created",
       datos: [foundDriver, foundLicense, foundUser],
