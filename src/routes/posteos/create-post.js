@@ -40,8 +40,8 @@ router.post("/", async (req, res) => {
     });
 
     await foundUser.addPost(post);
-    await post.addDriver(foundDriver);
-    await post.addLicensePlate(foundLicense);
+    await foundDriver.addPost(post);
+    await foundLicense.addPost(post);
     res.status(201).json({
       msg: "Post Was successfully created",
       datos: [foundDriver, foundLicense, foundUser],
