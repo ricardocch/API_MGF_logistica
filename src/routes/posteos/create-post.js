@@ -40,7 +40,7 @@ router.post("/", async (req, res) => {
       video: video,
       author: operator,
     });
-    await post.add(foundUser, foundDriver, foundLicense);
+    await Post.add(foundUser, foundDriver, foundLicense);
 
     res.status(201).json({ msg: "Post Was successfully created" });
   } catch (err) {
