@@ -16,7 +16,19 @@ router.post("/", async (req, res) => {
     driver,
     operator,
   } = req.body;
-
+  if (
+    !user ||
+    !date ||
+    !roadMap ||
+    !origin ||
+    !destination ||
+    !departureTime ||
+    !arrivalTime ||
+    !licensePlate ||
+    !driver ||
+    !operator
+  )
+    return res.status(200).send({ msg: "faltan campos por rellenar" });
   try {
     const foundUser = await User.findOne({
       where: { user: user },
@@ -28,6 +40,16 @@ router.post("/", async (req, res) => {
     const foundLicense = await LicensePlate.findOne({
       where: { name: licensePlate },
     });
+    if (!foundUser)
+      return res.status(404).send({ msg: `No se encontró el user: ${user}` });
+    if (!foundLicense)
+      return res
+        .status(404)
+        .send({ msg: `No se encontró la patente: ${licensePlate}` });
+    if (!foundDriver)
+      return res
+        .status(404)
+        .send({ msg: `No se encontró la conductor: ${driver}` });
 
     const post = await Post.create({
       date: date,
@@ -44,10 +66,9 @@ router.post("/", async (req, res) => {
     await foundLicense.addPost(post);
     res.status(201).json({
       msg: "Post Was successfully created",
-      datos: [foundDriver, foundLicense, foundUser],
     });
   } catch (err) {
-    res.status(404).send({ err: err, msg: "desde la ruta" });
+    res.status(404).send({ err: err });
   }
 });
 

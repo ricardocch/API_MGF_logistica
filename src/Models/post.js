@@ -15,6 +15,7 @@ module.exports = (sequelize) => {
     roadMap: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
     },
     origin: {
       type: DataTypes.STRING,
