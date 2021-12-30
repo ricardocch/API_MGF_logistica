@@ -42,10 +42,10 @@ sequelize.models = Object.fromEntries(capsEntries);
 const { User, LicensePlate, Post, Driver } = sequelize.models;
 
 // Aca vendrian las relaciones
-User.belongsToMany(Post, { through: "user_post" });
-Post.hasOne(User);
-Post.hasOne(Driver);
-Post.hasOne(LicensePlate);
+User.hasMany(Post);
+Post.belongsTo(User);
+Post.belongsTo(Driver);
+Post.belongsTo(LicensePlate);
 
 module.exports = {
   ...sequelize.models, // para poder importar los modelos así: const { Product, User } = require('./db.js');
