@@ -40,7 +40,11 @@ router.post("/", async (req, res) => {
       video: video,
       author: operator,
     });
-    await Post.add(foundUser, foundDriver, foundLicense);
+    const bindElementos = await Promise.all([
+      post.addUser(foundUser),
+      post.addDriver(foundDriver),
+      post.addLicensePlate(foundLicense),
+    ]);
 
     res.status(201).json({ msg: "Post Was successfully created" });
   } catch (err) {
