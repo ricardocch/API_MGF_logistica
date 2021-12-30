@@ -37,23 +37,23 @@ router.post("/", async (req, res) => {
 
     if (userCreated) {
       try {
-        // envio mail confirmacion
+        // envío mail confirmación
         let respMail = await sendMail(
           instanceUser.email,
           "Usuario creado",
-          "Su usuario en MGF Logistica se ha creado con éxito"
+          "Su usuario en MGF Logística se ha creado con éxito"
         );
         return res
-          .status(200)
+          .status(201)
           .send({ msg: "User created successfully", email: respMail });
       } catch {
         return res
           .status(404)
-          .send({ err: "Usuario Creado, Fallo en  envio email" });
+          .send({ err: "Usuario Creado, Fallo en  envío de email" });
       }
     }
 
-    res.status(201).json(pass);
+    res.status(200).json({ msg: "El usuario ya existe, prueba otro nombre" });
   } catch (err) {
     res.status(404).send(err);
   }
