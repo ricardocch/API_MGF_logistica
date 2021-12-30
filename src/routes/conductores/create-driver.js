@@ -7,12 +7,26 @@ router.post("/", async (req, res) => {
   const { name, dni } = req.body;
 
   try {
-    const driver = await Driver.create({
-      name: name,
-      dni: dni,
+    if (name.length < 4) {
+      return res
+        .status(404)
+        .json({ msg: "Name must have at least 4 characters" });
+    }
+    const [driver, created] = await Driver.findOrCreate({
+      where: { dni: dni },
+      defaults: {
+        name: name,
+        dni: dni,
+      },
     });
 
-    res.status(201).json({ msg: "Successfully Created", driver: driver });
+    if (created) {
+      return res.status(201).json({ msg: "Successfully created " });
+    }
+
+    res
+      .status(200)
+      .json({ msg: "DNI already exists with name " + driver.name });
   } catch (err) {
     res.status(404).send(err);
   }
