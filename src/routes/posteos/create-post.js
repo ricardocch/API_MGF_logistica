@@ -38,11 +38,11 @@ router.post("/", async (req, res) => {
       arrivalTime: arrivalTime,
       author: operator,
     });
-    await Post.add(foundUser, foundDriver, foundLicense);
+    await post.add(foundUser, foundDriver, foundLicense);
 
     res.status(201).json({ msg: "Post Was successfully created" });
   } catch (err) {
-    res.status(404).send(err);
+    res.status(404).send({ err: err, msg: "desde la ruta" });
   }
 });
 
