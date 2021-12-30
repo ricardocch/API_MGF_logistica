@@ -43,9 +43,9 @@ const { User, LicensePlate, Post, Driver } = sequelize.models;
 
 // Aca vendrian las relaciones
 User.hasMany(Post, { foreignKey: "userId_postId" });
-Post.belongsTo(User, { foreignKey: "userId_postId" });
-Post.belongsTo(Driver, { foreignKey: "driverId_postId" });
-Post.belongsTo(LicensePlate, { foreignKey: "licenseId_postId" });
+Post.belongsTo(User, { foreignKey: "userId_postId", target: "id" });
+Post.belongsTo(Driver, { foreignKey: "driverId_postId", target: "id" });
+Post.belongsTo(LicensePlate, { foreignKey: "licenseId_postId", target: "id" });
 
 module.exports = {
   ...sequelize.models, // para poder importar los modelos así: const { Product, User } = require('./db.js');
