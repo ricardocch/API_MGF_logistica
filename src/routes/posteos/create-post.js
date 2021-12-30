@@ -12,7 +12,6 @@ router.post("/", async (req, res) => {
     destination,
     departureTime,
     arrivalTime,
-    video,
     licensePlate,
     driver,
     operator,
@@ -37,7 +36,6 @@ router.post("/", async (req, res) => {
       destination: destination,
       departureTime: departureTime,
       arrivalTime: arrivalTime,
-      video: video,
       author: operator,
     });
     await Post.add(foundUser, foundDriver, foundLicense);
