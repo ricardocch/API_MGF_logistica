@@ -40,6 +40,10 @@ router.post("/", async (req, res) => {
       video: video,
       author: operator,
     });
+
+    const prueba = await post.addUser(foundUser);
+    const prueba2 = await post.addDriver(foundDriver);
+    const prueba3 = await post.addLicensePlate(foundLicense);
     // const bindElementos = await Promise.all([
     //   post.addUser(foundUser),
     //   post.addDriver(foundDriver),
