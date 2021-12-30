@@ -40,13 +40,16 @@ router.post("/", async (req, res) => {
       video: video,
       author: operator,
     });
-    const bindElementos = await Promise.all([
-      post.addUser(foundUser),
-      post.addDriver(foundDriver),
-      post.addLicensePlate(foundLicense),
-    ]);
+    // const bindElementos = await Promise.all([
+    //   post.addUser(foundUser),
+    //   post.addDriver(foundDriver),
+    //   post.addLicensePlate(foundLicense),
+    // ]);
 
-    res.status(201).json({ msg: "Post Was successfully created" });
+    res.status(201).json({
+      msg: "Post Was successfully created",
+      datos: [foundDriver, foundLicense, foundUser],
+    });
   } catch (err) {
     res.status(404).send({ err: err, msg: "desde la ruta" });
   }
