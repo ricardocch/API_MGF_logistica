@@ -39,7 +39,7 @@ router.use("/licenseplate", lPlate);
 const createPost = require("./posteos/create-post");
 const listPost = require("./posteos/list-post");
 router.use("/post/create", createPost);
-router.use("/post/listPost/:user/:admin", listPost);
+router.use("/post/listPost", listPost);
 /* --------------------------------Post-------------------------------- */
 
 /* --------------------------------Historial-------------------------------- */
