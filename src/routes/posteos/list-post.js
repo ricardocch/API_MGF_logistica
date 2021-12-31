@@ -6,7 +6,14 @@ router.get("/", async function (req, res) {
   const { user, admin } = req.query;
   try {
     if (admin === true) {
-      let posts = await Post.findAll();
+      let posts = await Post.findAll({
+        include: [
+          {
+            model: User,
+            where: { user: user },
+          },
+        ],
+      });
       return res.json(posts);
     }
     let postsUser = await Post.findAll({
