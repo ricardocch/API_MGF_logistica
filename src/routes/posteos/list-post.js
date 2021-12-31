@@ -11,7 +11,7 @@ router.get("/", async function (req, res) {
     }
     let foundUser = await User.findOne({ where: { user: user } });
     let postsUser = posts.filter((e) => e.userId === foundUser.id);
-    let prueba = await posts.map((post) => {
+    let prueba = await postsUser.map((post) => {
       let userReplace = await User.findOne({ where: { id: post.userId } });
       let driverReplace = await Driver.findOne({
         where: { id: post.driverId },
