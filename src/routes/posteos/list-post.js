@@ -6,14 +6,7 @@ router.get("/", async function (req, res) {
 
     try{
         let postList = await Post.findAll({
-            include: [
-                // { model: db.track, attributes: ['id', 'name','artist_name' ,'album_name'], as: 'track'},
-                // { model: db.track, attributes: ['id', 'name','artist_name' ,'album_name'], as: 'tracks', paranoid: true, required: false}
-                { model: User},
-                { model: Driver},
-                { model: LicensePlate}
-
-            ]
+            include: [User]
         })
 
         console.log(postList);
