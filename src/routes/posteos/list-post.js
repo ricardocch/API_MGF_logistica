@@ -8,11 +8,7 @@ router.get("/", async function (req, res) {
     try{
         let postList = await Post.findAll({
             include: [{
-                model: User,
-                through: {
-                //   attributes: ['createdAt', 'startedAt', 'finishedAt'],
-                  where: {id:{[Op.gte]:2} }
-                }
+                model: User
               }]            
         })
 
