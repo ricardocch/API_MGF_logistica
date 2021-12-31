@@ -1,4 +1,5 @@
-const { Router,op } = require("express");
+const { Router } = require("express");
+const {Op} = require("sequelize") 
 const router = Router();
 const { Post, User, Driver, LicensePlate } = require("../../db.js");
 
@@ -10,7 +11,7 @@ router.get("/", async function (req, res) {
                 model: User,
                 through: {
                 //   attributes: ['createdAt', 'startedAt', 'finishedAt'],
-                  where: {id:{[op.gte]:2} }
+                  where: {id:{[Op.gte]:2} }
                 }
               }]            
         })
