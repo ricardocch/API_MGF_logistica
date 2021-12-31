@@ -11,7 +11,7 @@ router.get("/", async function (req, res) {
     }
     let foundUser = await User.findOne({ where: { user: user } });
     let postsUser = await Post.findAll();
-    let prueba = postsUser.filter((e) => e.UserId === foundUser.id);
+    let prueba = postsUser.filter((e) => e.userId === foundUser.id);
     return res.json(postsUser);
   } catch (err) {
     res.status(500).send({ err: err, msg: "Algo sucedió en la ruta" });
