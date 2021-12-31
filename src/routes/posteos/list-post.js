@@ -9,8 +9,8 @@ router.get("/", async function (req, res) {
       let posts = await Post.findAll();
       return res.json(posts);
     }
-    let foundUser = await User.findOne({ where: { user: user } });
-    let postsUser = await Post.findAll({ where: { UserId: foundUser.id } });
+    // let foundUser = await User.findOne({ where: { user: user } });
+    let postsUser = await Post.findAll();
     return res.json(postsUser);
   } catch (err) {
     res.status(500).send({ err: err, msg: "Algo sucedió en la ruta" });
