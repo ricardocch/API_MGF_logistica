@@ -3,6 +3,25 @@ const router = Router();
 const { Post, User, Driver, LicensePlate } = require("../../db.js");
 
 router.get("/", async function (req, res) {
+
+    try{
+        let postList = await Post.findByPk(4,{
+            include: [
+                // { model: db.track, attributes: ['id', 'name','artist_name' ,'album_name'], as: 'track'},
+                // { model: db.track, attributes: ['id', 'name','artist_name' ,'album_name'], as: 'tracks', paranoid: true, required: false}
+                { model: User},
+                { model: Driver},
+                { model: LicensePlate}
+
+            ]
+        })
+
+        console.log(postList);
+    }
+    catch(err){
+        console.log(err);
+        res.status(509).send('Fallo')
+    }
 //   const { user, admin } = req.query;
 //   try {
 //     let posts = await Post.findAll();
