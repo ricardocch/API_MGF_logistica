@@ -1,4 +1,4 @@
-const { Router } = require("express");
+const { Router,op } = require("express");
 const router = Router();
 const { Post, User, Driver, LicensePlate } = require("../../db.js");
 
@@ -6,7 +6,13 @@ router.get("/", async function (req, res) {
 
     try{
         let postList = await Post.findAll({
-            include: [User]
+            include: [{
+                model: User,
+                through: {
+                //   attributes: ['createdAt', 'startedAt', 'finishedAt'],
+                  where: {id:{[op.gte]:2} }
+                }
+              }]            
         })
 
         console.log(postList);
