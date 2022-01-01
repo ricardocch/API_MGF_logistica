@@ -8,9 +8,11 @@ module.exports = {
         const nodemailer = require('nodemailer');
         //configuracion de smtp
         //las credenciales se configuran el .env
+        console.log("smtp",process.env.SMTP_USER);
         let configMail = {
-          host: "smtp.mailtrap.io",
-          port: 2525,
+          host: "smtp.gmail.com",
+          port: 465,
+          secure:true,
           auth: {
             user: process.env.SMTP_USER,
             pass: process.env.SMTP_PASSWORD

@@ -46,7 +46,8 @@ router.post("/", async (req, res) => {
         return res
           .status(201)
           .send({ msg: "User created successfully", email: respMail });
-      } catch {
+      } catch (err){
+        console.log(err);
         return res
           .status(404)
           .send({ err: "Usuario Creado, Fallo en  envío de email" });
@@ -55,6 +56,7 @@ router.post("/", async (req, res) => {
 
     res.status(200).json({ msg: "El usuario ya existe, prueba otro nombre" });
   } catch (err) {
+    console.log(err);
     res.status(404).send(err);
   }
 });
