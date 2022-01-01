@@ -51,7 +51,7 @@ router.post("/", async (req, res) => {
         .status(404)
         .send({ msg: `No se encontró la conductor: ${driver}` });
 
-    const post = await Post.create({
+    const postCreated = await Post.create({
       date: date,
       roadMap: roadMap,
       origin: origin,
