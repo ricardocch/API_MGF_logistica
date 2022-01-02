@@ -2,9 +2,9 @@ const { Router } = require("express");
 const router = Router();
 
 /* --------------------------------USERS-------------------------------- */
-const user = require("./Users/createUser");
+const user = require("./users/create-user");
 const modify = require("./users/update-pass");
-const deleted = require("./Users/deleteuser");
+const deleted = require("./users/delete-user");
 // const typeUser = require("./Users/typeUser");  EN DESUSO 18/12 Para borrar?
 const listUser = require("./users/list-user");
 const updatePass = require("./users/update-pass");
@@ -39,7 +39,7 @@ router.use("/licenseplate", lPlate);
 const createPost = require("./posteos/create-post");
 const listPost = require("./posteos/list-post");
 router.use("/post/create", createPost);
-router.use("/post/listPost/:user/:admin", listPost);
+router.use("/post/listPost", listPost);
 /* --------------------------------Post-------------------------------- */
 
 /* --------------------------------Historial-------------------------------- */
@@ -66,8 +66,8 @@ router.use("/historial/createHistorial", createHistorial);
 
 /* --------------------------------Video-------------------------------- */
 
-const upload = require("./Video/Upload");
-const url = require("./Video/Url");
+const upload = require("./videos/upload-video");
+const url = require("./videos/url-video");
 router.use("/video/upload", upload);
 router.use("/video/URL", url);
 

@@ -40,8 +40,8 @@ const { User, LicensePlate, Post, Driver, Historial } = sequelize.models;
 
 // Aca vendrian las relaciones
 User.belongsToMany(Post, { through: "user_post" });
-Historial.hasOne(User);
-Historial.hasOne(Post);
+// Historial.hasOne(User);
+// Historial.hasOne(Post);
 Post.hasOne(User);
 Post.hasOne(Driver);
 Post.hasOne(LicensePlate);

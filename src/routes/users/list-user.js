@@ -14,7 +14,7 @@ router.get("/", async function (req, res) {
     let userInstance = [];
 
     if (userAdminInstance === null) {
-      return res.status(500).send({ err: "usuario no exste" });
+      return res.status(500).send({ err: "usuario no existe" });
     } //si es sa vera todos los usuarios que no sean el
     else if (userAdminInstance.admin === "sa") {
       userInstance = await User.findAll({
