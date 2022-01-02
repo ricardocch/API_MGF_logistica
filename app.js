@@ -11,8 +11,8 @@ const routes = require("./src/routes/index");
 const { JWT } = process.env;
 
 server.use(express.urlencoded({ extended: true }));
-const auth = express();
 server.set("llave", JWT);
+const auth = express();
 
 server.use(cors());
 server.use(morgan("dev"));
