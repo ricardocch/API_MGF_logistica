@@ -44,8 +44,6 @@ router.get("/", async function (req, res) {
         name: el.name,
         email: el.email,
         type: el.admin,
-        phone: el.phone,
-        cuit: el.cuit,
       };
     });
 
