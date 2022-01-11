@@ -30,7 +30,7 @@ router.put("/", async (req, res) => {
       try {
         // envío mail confirmación
         let respMail = await sendMail(
-          email,
+          foundUser.email,
           `Actualización de Usuario - MGF Logística`,
           `¡Hola ${foundUser.user}! Lo invitamos a revisar en la web https://mgflogistica.netlify.app/ porque se actualizaron su datos: Usuario: ${foundUser.user}, contraseña: ${password}.`
         );
@@ -47,6 +47,7 @@ router.put("/", async (req, res) => {
       }
     }
   } catch (err) {
+    console.error(err);
     res.status(404).send(err);
   }
 });
